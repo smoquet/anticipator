@@ -4,6 +4,10 @@ from django.template import loader
 from django.shortcuts import render
 
 from .forms import NameForm
+import vpg.filemanager
+import vpg.spotify
+# from filemanager import *
+# from spotify import *
 
 def index(request):
     # if this is a POST request we need to process the form data
@@ -34,3 +38,11 @@ def index(request):
         form = NameForm()
 
     return render(request, 'form/index.html', {'form': form})
+
+def vpgtest(request):
+    topX = vpg.filemanager.read_settings('vpg/voorpretgen.ini')[0]
+    template = loader.get_template('form/result.html')
+    context = {
+        'lineup': topX
+    }
+    return HttpResponse(template.render(context, request))
