@@ -1,0 +1,9 @@
+{% if lineup != '' %}
+    <ul>
+    {% for artist in lineup %}
+        <li>{{ artist }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No lineup supplied.</p>
+{% endif %}
