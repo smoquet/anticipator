@@ -12,14 +12,20 @@ def index(request):
         form = NameForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
+            # process the data in form.cleaned_data to the variables
+            # they are used as input to the spotify api
+
             lineup = form.cleaned_data['lineup']
+            playlist_name = form.cleaned_data['playlist_name']
+            sort = form.cleaned_data['sort']
+            public = form.cleaned_data['public']
+
             template = loader.get_template('form/result.html')
             context = {
-                'lineup': lineup
+                'lineup': lineup, 'playlist_name': playlist_name,
+                'sort':sort, 'public':public,
             }
+            # redirect to a new URL:
             return HttpResponse(template.render(context, request))
             # return HttpResponseRedirect('/')
 

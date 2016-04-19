@@ -4,6 +4,20 @@
         <li>{{ artist }}</li>
     {% endfor %}
     </ul>
+    <ul>
+    {% for x in playlist_name %}
+        <li>{{ x }}</li>
+    {% endfor %}
+    </ul>
+    <ul>
+    {% if sort %}
+      sort
+      {%endif%}
+    {% if public %}
+      public
+    {%endif%}
+  </ul>
+    </ul>
 {% else %}
     <p>No lineup supplied.</p>
 {% endif %}
