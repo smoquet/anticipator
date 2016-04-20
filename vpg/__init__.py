@@ -1,1 +1,1 @@
-__all__ = ['filemanager', 'spotify']
+__all__ = ['filemanager', 'spotify', 'main']

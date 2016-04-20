@@ -1,11 +1,15 @@
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
+from django.http import HttpRequest
 from django.template import loader
 from django.shortcuts import render
+from django.shortcuts import redirect
 
 from .forms import NameForm
-import vpg.filemanager
-import vpg.spotify
+from vpg import *
+# import vpg.filemanager
+# import vpg.spotify
+# import vpg.main
 # from filemanager import *
 # from spotify import *
 
@@ -34,9 +38,24 @@ def index(request):
     return render(request, 'form/index.html', {'form': form})
 
 def vpgtest(request):
-    topX = vpg.filemanager.read_settings('vpg/voorpretgen.ini')[0]
+    lineup, top_x_tracks, playlist_name, spot_token, username = main.initialise('args')
+    if not spot_token[0]:
+        return redirect(spot_token[1])
     template = loader.get_template('form/result.html')
     context = {
-        'lineup': topX
+        'lineup': lineup
+    }
+    return HttpResponse(template.render(context, request))
+
+def callspot(request):
+    lineup, top_x_tracks, playlist_name, spot_token, username = main.initialise('args')
+
+    spot_response = HttpRequest.build_absolute_uri(request)
+    spot_token = spotify.make_token(spot_response)
+    artist_ids = spotify.artist_id_list_gen(lineup, spot_token)
+
+    template = loader.get_template('form/result.html')
+    context = {
+        'lineup': artist_ids
     }
     return HttpResponse(template.render(context, request))

@@ -1,16 +1,28 @@
 import sys
 import spotipy
 import spotipy.util as util
+import spotipy.oauth2 as oauth2
 from main import *
 import time
-
-
 
 def get_token(username, client_id, client_secret, redirect_uri):
     spotify = spotipy.Spotify()
     scope = 'playlist-modify-private'
-    token = spotipy.util.prompt_for_user_token(username, scope, client_id, client_secret, redirect_uri)
-    return token
+    sp_oauth = oauth2.SpotifyOAuth(client_id, client_secret, redirect_uri,
+        scope=scope, cache_path=".cache-" + username )
+    token_info = sp_oauth.get_cached_token()
+    if not token_info:
+        auth_url = sp_oauth.get_authorize_url()
+        # return redirect(auth_url)
+        return (False, auth_url)
+    # token = spotipy.util.prompt_for_user_token(username, scope, client_id, client_secret, redirect_uri)
+    # token = spotipy.util.prompt_for_user_token(username, scope, client_id, client_secret, redirect_uri)
+    return token_info
+
+def make_token(spot_response):
+    code = oauth2.sp_oauth.parse_response_code(spot_response)
+    token_info = oauth2.sp_oauth.get_access_token(code)
+    return token_info['access_token']
 
 def artist_id_list_gen(artist_list, spot_token):
     # expects artists as strings in a list
