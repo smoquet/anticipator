@@ -49,9 +49,10 @@ def vpgtest(request):
 
 def callspot(request):
     lineup, top_x_tracks, playlist_name, spot_token, username = main.initialise('args')
-
+    settings_file = 'vpg/voorpretgen.ini'
     spot_response = HttpRequest.build_absolute_uri(request)
-    spot_token = spotify.make_token(spot_response)
+    top_x_set, client_id, client_secret, redirect_uri = filemanager.read_settings(settings_file)
+    spot_token = spotify.make_token(spot_response, 'henk', client_id, client_secret, redirect_uri)
     artist_ids = spotify.artist_id_list_gen(lineup, spot_token)
 
     template = loader.get_template('form/result.html')

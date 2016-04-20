@@ -19,9 +19,12 @@ def get_token(username, client_id, client_secret, redirect_uri):
     # token = spotipy.util.prompt_for_user_token(username, scope, client_id, client_secret, redirect_uri)
     return token_info
 
-def make_token(spot_response):
-    code = oauth2.sp_oauth.parse_response_code(spot_response)
-    token_info = oauth2.sp_oauth.get_access_token(code)
+def make_token(spot_response, username, client_id, client_secret, redirect_uri):
+    scope = 'playlist-modify-private'
+    sp_oauth = oauth2.SpotifyOAuth(client_id, client_secret, redirect_uri,
+        scope=scope, cache_path=".cache-" + username )
+    code = sp_oauth.parse_response_code(spot_response)
+    token_info = sp_oauth.get_access_token(code)
     return token_info['access_token']
 
 def artist_id_list_gen(artist_list, spot_token):
