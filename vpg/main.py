@@ -1,7 +1,7 @@
 import argparse
 import sys
-from filemanager import *
-from spotify import *
+from .filemanager import *
+from .spotify import *
 import time
 
 def parse_arguments(args):

@@ -1,7 +1,31 @@
+{% load staticfiles %}
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'form/style.css' %}" />
+
+<div id = 'background'>
+<body background="../../static/pictures/festival.jpg">
+</div>
+
+
+<header>
+  Anticipator
+</header>
+
+<div id = 'form'>
+
 <form action="/" method="post">
     {% csrf_token %}
     <table>
      {{form.as_table}}
    </table>
-    <input type="submit" value="Submit" />
+
+   <div id = 'submit'>
+    <input type="image" src='../../static/pictures/play.png' value="Submit" class = 'image_submit'/>
+  </div>
+
 </form>
+
+</div>

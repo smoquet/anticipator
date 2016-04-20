@@ -1,6 +1,15 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'form/style.css' %}" />
+
+<header>
+  jojojo
+</header>
+
 {% if lineup != '' %}
     <ul>
     {% for artist in lineup %}
+        <li>{{ artist }}</li>
         <li>{{ artist }}</li>
     {% endfor %}
     </ul>
