@@ -78,7 +78,8 @@ def callspot(request):
 
     # gets user with a token and caches it in the server
     spot_response = HttpRequest.build_absolute_uri(request)
-    spot_token = spotify.make_token(spot_response, 'milowinterburn', client_id, client_secret, redirect_uri)
+    sid = request.session._get_or_create_session_key()
+    spot_token = spotify.make_token(spot_response, sid, client_id, client_secret, redirect_uri)
 
     return redirect(index)
 
@@ -107,3 +108,18 @@ def callspot(request):
     #     'lineup': track_id_list
     # }
     # return HttpResponse(template.render(context, request))
+
+def vpgtest(request):
+    sid = request.session._get_or_create_session_key()
+    #hard coded vars for testing:
+    lineup, top_x_tracks, playlist_name, spot_token = main.initialise(sid)
+    # if spot token[0] is false (see spotify file get_token function) then there is no token in chache
+    if type(spot_token) != dict:
+        if not spot_token[0]:
+            # and therefore user needs to be redirected to spot_token[1], wich is the auth_url
+            return redirect(spot_token[1])
+    template = loader.get_template('form/result.html')
+    context = {
+        'lineup': lineup
+    }
+    return HttpResponse(template.render(context, request))
