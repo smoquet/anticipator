@@ -5,12 +5,12 @@ import random
 import spotify
 import filemanager
 
-def initialise(args):
+def initialise():
 #must eventully expect arguments from form
     # must ventueally return lineup as list of strings, top tracks and playlist_name, sort+public bools, token, username
     settings_file = 'vpg/voorpretgen.ini'
     # username is random for now, will be filled from cookie
-    username = ''.join(random.sample(string.lowercase, 8))
+    username = 'milowinterburn'
 
     top_x_set, client_id, client_secret, redirect_uri = filemanager.read_settings(settings_file)
 

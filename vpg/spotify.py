@@ -24,10 +24,12 @@ def get_token(username, client_id, client_secret, redirect_uri):
     return token_info
 
 def make_token(spot_response, username, client_id, client_secret, redirect_uri):
+    # gets a token from spotify and caches it
     scope = 'playlist-modify-private'
     sp_oauth = oauth2.SpotifyOAuth(client_id, client_secret, redirect_uri,
         scope=scope, cache_path=".cache-" + username )
     code = sp_oauth.parse_response_code(spot_response)
+    #gets token and caches it in
     token_info = sp_oauth.get_access_token(code)
     return token_info['access_token']
 
@@ -68,6 +70,9 @@ def artist_id_list_gen(artist_list, spot_token):
     # append ID id_list or name in search_failure list
     artist_id_list = []
     artis_fail_search_list = []
+    # artist_list_as_type_list = artist_list.split(',')
+
+
     for name in artist_list:
         x = get_artist_id(name, spot_token)
         if type(x) == unicode:
@@ -78,7 +83,6 @@ def artist_id_list_gen(artist_list, spot_token):
     return artist_id_list
 
 def tracklist_gen(artist_id_list, n, spot_token):
-    print "init tracklist_gen", time.clock()
     # expects list of artist id's and an integer for how many tracks per artists, maximum == 10!
     # returns a list of top track id's
     country_code = 'NL'
@@ -105,7 +109,6 @@ def tracklist_gen(artist_id_list, n, spot_token):
     # return 0
 
 def write_playlist(track_id_list, playlist_name, spot_token, username):
-    print "init write_playlist", time.clock()
     # writes playlist in spotify
     # initialised in main
     # returns nothing
