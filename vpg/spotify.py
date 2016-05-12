@@ -37,6 +37,11 @@ def artist_id_list_gen(artist_list, spot_token):
     # expects artists as strings in a list
     # returns list of id's as unicode strings and internally keeps track of search failures
 
+    def remove_unicode(string):
+        import unicodedata
+        return unicodedata.normalize('NFKD', string).encode('ascii','ignore')
+
+
     def get_artist_id(name, spot_token):
         print "init get_artist_id", time.clock()
         # expects artist name as string
@@ -70,10 +75,11 @@ def artist_id_list_gen(artist_list, spot_token):
     # append ID id_list or name in search_failure list
     artist_id_list = []
     artis_fail_search_list = []
-    # artist_list_as_type_list = artist_list.split(',')
+    x = remove_unicode(artist_list)
+    artist_list_as_type_list = x.split(',')
 
 
-    for name in artist_list:
+    for name in artist_list_as_type_list:
         x = get_artist_id(name, spot_token)
         if type(x) == unicode:
             artist_id_list.append(x)
