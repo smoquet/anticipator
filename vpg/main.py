@@ -36,7 +36,7 @@ def main(args):
     artist_ids = spotify.artist_id_list_gen(lineup, spot_token)
     track_id_list = tracklist_gen(artist_ids, top_x_tracks, spot_token)
 
-    write_playlist(track_id_list, playlist_name, spot_token, username)
+    # write_playlist(track_id_list, playlist_name, spot_token, username)
     # print 'track_id_list= ',
     # print track_id_list
     print "exit main", time.clock()
