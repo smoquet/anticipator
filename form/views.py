@@ -7,6 +7,8 @@ from django.shortcuts import redirect
 
 from .forms import NameForm
 from vpg import *
+import random
+import string
 # import vpg.filemanager
 # import vpg.spotify
 # import vpg.main
@@ -15,7 +17,8 @@ from vpg import *
 
 def index(request):
     print 'index entered'
-    lineup, top_x_tracks, playlist_name, spot_token, username = main.initialise()
+    sid = request.session._get_or_create_session_key()
+    lineup, top_x_tracks, playlist_name, spot_token = main.initialise(sid)
     # top_x_tracks, spot_token = main.initialise()
     # if spot token[0] is false (see spotify file get_token function) then there is no token in chache
     print spot_token
@@ -66,7 +69,6 @@ def index(request):
     else:
         form = NameForm()
     return render(request, 'form/index.html', {'form': form})
-
 
 
 def callspot(request):
