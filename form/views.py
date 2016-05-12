@@ -52,11 +52,13 @@ def callspot(request):
     settings_file = 'vpg/voorpretgen.ini'
     spot_response = HttpRequest.build_absolute_uri(request)
     top_x_set, client_id, client_secret, redirect_uri = filemanager.read_settings(settings_file)
-    spot_token = spotify.make_token(spot_response, 'henk', client_id, client_secret, redirect_uri)
+    spot_token = spotify.make_token(spot_response, 'milowinterburn', client_id, client_secret, redirect_uri)
     artist_ids = spotify.artist_id_list_gen(lineup, spot_token)
+    track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token)
+    spotify.write_playlist(track_id_list, playlist_name, spot_token, username)
 
     template = loader.get_template('form/result.html')
     context = {
-        'lineup': artist_ids
+        'lineup': track_id_list
     }
     return HttpResponse(template.render(context, request))
