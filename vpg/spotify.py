@@ -6,6 +6,7 @@ from main import *
 import time
 
 def get_token(username, client_id, client_secret, redirect_uri):
+    # called upon in initialise function
     spotify = spotipy.Spotify()
     scope = 'playlist-modify-private'
     # door module oauth2 aaan te roepen creeren we een object van classe SpitifyOAuth, die
@@ -19,7 +20,7 @@ def get_token(username, client_id, client_secret, redirect_uri):
         auth_url = sp_oauth.get_authorize_url()
         # return tupe with False and the redirect url in auth_url.
         return (False, auth_url)
-    # otherwise return the token 
+    # otherwise return the token
     return token_info
 
 def make_token(spot_response, username, client_id, client_secret, redirect_uri):

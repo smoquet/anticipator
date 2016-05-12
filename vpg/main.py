@@ -6,13 +6,14 @@ import spotify
 import filemanager
 
 def initialise(args):
-    print "init initialise", time.clock()
-    # expects arguments from form
-    # returns lineup as list of strings, top tracks and playlist_name
+#must eventully expect arguments from form
+    # must ventueally return lineup as list of strings, top tracks and playlist_name, sort+public bools, token, username
     settings_file = 'vpg/voorpretgen.ini'
     # username is random for now, will be filled from cookie
     username = ''.join(random.sample(string.lowercase, 8))
+
     top_x_set, client_id, client_secret, redirect_uri = filemanager.read_settings(settings_file)
+
     spot_token = spotify.get_token(username, client_id, client_secret, redirect_uri)
     # top_x_tracks = arguments[1] if arguments[1] else int(top_x_set)
     top_x_tracks = int(top_x_set)
