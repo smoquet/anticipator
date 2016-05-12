@@ -38,8 +38,11 @@ def index(request):
     return render(request, 'form/index.html', {'form': form})
 
 def vpgtest(request):
+    #hard coded vars for testing:
     lineup, top_x_tracks, playlist_name, spot_token, username = main.initialise('args')
+    # if spot token[0] is false (see spotify file get_token function) then there is no token in chache
     if not spot_token[0]:
+        # and therefore user needs to be redirected to spot_token[1], wich is the auth_url
         return redirect(spot_token[1])
     template = loader.get_template('form/result.html')
     context = {
@@ -55,7 +58,7 @@ def callspot(request):
     spot_token = spotify.make_token(spot_response, 'milowinterburn', client_id, client_secret, redirect_uri)
     artist_ids = spotify.artist_id_list_gen(lineup, spot_token)
     track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token)
-    spotify.write_playlist(track_id_list, playlist_name, spot_token, username)
+    # spotify.write_playlist(track_id_list, playlist_name, spot_token, username)
 
     template = loader.get_template('form/result.html')
     context = {

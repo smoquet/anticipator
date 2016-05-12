@@ -8,15 +8,18 @@ import time
 def get_token(username, client_id, client_secret, redirect_uri):
     spotify = spotipy.Spotify()
     scope = 'playlist-modify-private'
+    # door module oauth2 aaan te roepen creeren we een object van classe SpitifyOAuth, die
+    # initieren we met de input die tussen haakjes staat en slaan we op in sp_oauth
     sp_oauth = oauth2.SpotifyOAuth(client_id, client_secret, redirect_uri,
         scope=scope, cache_path=".cache-" + username )
+    # check to see if there is a cached token, by calling upon object in sp_oauth
     token_info = sp_oauth.get_cached_token()
     if not token_info:
+        # maak een url voor e bezoeker om heen te gaan een te authoriseren
         auth_url = sp_oauth.get_authorize_url()
-        # return redirect(auth_url)
+        # return tupe with False and the redirect url in auth_url.
         return (False, auth_url)
-    # token = spotipy.util.prompt_for_user_token(username, scope, client_id, client_secret, redirect_uri)
-    # token = spotipy.util.prompt_for_user_token(username, scope, client_id, client_secret, redirect_uri)
+    # otherwise return the token 
     return token_info
 
 def make_token(spot_response, username, client_id, client_secret, redirect_uri):
