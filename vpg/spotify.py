@@ -78,7 +78,6 @@ def artist_id_list_gen(artist_list, spot_token):
     x = remove_unicode(artist_list)
     artist_list_as_type_list = x.split(',')
 
-
     for name in artist_list_as_type_list:
         x = get_artist_id(name, spot_token)
         if type(x) == unicode:
