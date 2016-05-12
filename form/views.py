@@ -14,6 +14,14 @@ from vpg import *
 # from spotify import *
 
 def index(request):
+    # lineup, top_x_tracks, playlist_name, spot_token, username = main.initialise('args')
+    top_x_tracks, spot_token = main.initialise('args')
+    # if spot token[0] is false (see spotify file get_token function) then there is no token in chache
+    if not spot_token[0]:
+        # and therefore user needs to be redirected to spot_token[1], wich is the auth_url
+        #when user comes back from that he will arrive at our redirect_uri, wich is callspot
+        return redirect(spot_token[1])
+
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -24,34 +32,47 @@ def index(request):
             # ...
             # redirect to a new URL:
             lineup = form.cleaned_data['lineup']
+            playlist_name = form.cleaned_data['playlist_name']
+            sort = form.cleaned_data['sort']
+            public = form.cleaned_data['public']
             template = loader.get_template('form/result.html')
+
+            # process the data
+            artist_ids = spotify.artist_id_list_gen(lineup, spot_token)
+            track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token)
+            spotify.write_playlist(track_id_list, playlist_name, spot_token, username)
+
+
+            # SUCCES render the it's all good result.html
+            template = loader.get_template('form/result.html')
+            # these key value pairs are called upon in the html file
             context = {
-                'lineup': lineup
+                'lineup': lineup,
+                'playlist_name': playlist_name,
+                'username':username,
+                'sort':sort,
+                'public':public,
             }
+
             return HttpResponse(template.render(context, request))
             # return HttpResponseRedirect('/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
         form = NameForm()
-
     return render(request, 'form/index.html', {'form': form})
+
 
 def vpgtest(request):
     #hard coded vars for testing:
-    lineup, top_x_tracks, playlist_name, spot_token, username = main.initialise('args')
-    # if spot token[0] is false (see spotify file get_token function) then there is no token in chache
-    if not spot_token[0]:
-        # and therefore user needs to be redirected to spot_token[1], wich is the auth_url
-        #when user comes back from that he will arrive at our redirect_uri, wich is callspot
-        return redirect(spot_token[1])
-    # puts html file in template
-    template = loader.get_template('form/result.html')
-    # this key valuea pair is called upon in the html file
-    context = {
-        'lineup': lineup
-    }
-    return HttpResponse(template.render(context, request))
+
+
+
+
+
+
+    # ga uit van een user met token die shit input geeft, deze input geef je aan de functie
+    # die milo gaat schrijven, deze functie returnt ook weer shite
 
 def callspot(request):
     # a user without cache_token arrives from oauth, wich was given to him in vpgtest
@@ -66,13 +87,11 @@ def callspot(request):
     top_x_set, client_id, client_secret, redirect_uri = filemanager.read_settings(settings_file)
     #make_token
     spot_token = spotify.make_token(spot_response, 'milowinterburn', client_id, client_secret, redirect_uri)
-    #make artist ids
-    artist_ids = spotify.artist_id_list_gen(lineup, spot_token)
-    # get tracks
-    track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token)
-    # spotify.write_playlist(track_id_list, playlist_name, spot_token, username)
 
-    template = loader.get_template('form/result.html')
+
+
+
+        template = loader.get_template('form/result.html')
     context = {
         'lineup': track_id_list
     }
