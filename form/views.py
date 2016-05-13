@@ -118,8 +118,10 @@ def vpgtest(request):
         if not spot_token[0]:
             # and therefore user needs to be redirected to spot_token[1], wich is the auth_url
             return redirect(spot_token[1])
+    artist_ids = spotify.artist_id_list_gen(lineup, spot_token)
+    track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token)
     template = loader.get_template('form/result.html')
     context = {
-        'lineup': lineup
+        'lineup': track_id_list
     }
     return HttpResponse(template.render(context, request))
