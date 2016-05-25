@@ -9,18 +9,29 @@
 
 /*background*/
 
-body {
+/*body {
     background-image: url('../../static/pictures/festival.jpg');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: bottom;
+}*/
+
+
+.background{
+  padding: 30px 30px;
+  width: 100vw;
+  background-position: top;
+  background-size: cover;
+  background-image: url("../../static/pictures/festival2.jpg");
+  height: 1000px;
 }
+
 
 /*header*/
 
 
 
-header{
+.title{
   color: white;
   /*opacity: 0.9;*/
   border-style: solid;
@@ -28,7 +39,7 @@ header{
   border-color: white;
   text-align: center;
   font-size: 500%;
-  margin: 4%;
+  margin: 0px 0px;
   font-family: blackout;
   border-radius: 5px;
 }
@@ -52,7 +63,7 @@ label{
 
 }
 
-#form{
+.form{
   color: white;
   /*border-style: solid;
   border-color: green;*/

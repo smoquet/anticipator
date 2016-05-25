@@ -1,31 +1,35 @@
 {% load staticfiles %}
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 
+<!DOCTYPE html>
+<html lang = 'en'>
+<head>
+		<meta  charset="UTF-8">
+		<title> Anticipator </title>
+    <link rel="stylesheet" type="text/css" href="{% static 'form/normalize.css' %}" />
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'form/style.css' %}" />
+</head>
 
+<body>
 
-<link rel="stylesheet" type="text/css" href="{% static 'form/style.css' %}" />
+<div class = 'background'>
 
-<div id = 'background'>
-<body background="../../static/pictures/festival.jpg">
-</div>
-
-
-<header>
+<div class="title">
   Anticipator
-</header>
+</div>
 
-<div id = 'form'>
-
-<form action="/" method="post">
-    {% csrf_token %}
-    <table>
-     {{form.as_table}}
-   </table>
-
-   <div id = 'submit'>
-    <input type="image" src='../../static/pictures/play.png' value="Submit" class = 'image_submit'/>
-  </div>
-
-</form>
+<div class = 'form'>
+  <form action="/" method="post">
+      {% csrf_token %}
+      <table>
+       {{form.as_table}}
+     </table>
+     <div id = 'submit'>
+      <input type="image" src='../../static/pictures/play.png' value="Submit" class = 'image_submit'/>
+    </div>
+  </form>
+</div>
 
 </div>
+
+</body>
