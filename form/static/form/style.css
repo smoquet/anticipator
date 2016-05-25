@@ -4,13 +4,13 @@
    src: url('../fonts/Blackout Sunrise.ttf');
 }
 @pic{
-   src: url('../../static/pictures/festival.jpg');
+   src: url('../pictures/festival.jpg');
 }
 
 /*background*/
 
 /*body {
-    background-image: url('../../static/pictures/festival.jpg');
+    background-image: url('../pictures/festival.jpg');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: bottom;
@@ -22,7 +22,7 @@
   width: 100vw;
   background-position: top;
   background-size: cover;
-  /*background-image: url("../../static/pictures/festival2.jpg");*/
+  /*background-image: url("../pictures/festival2.jpg");*/
   height: 900px;
 }
 

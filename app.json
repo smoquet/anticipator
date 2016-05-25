@@ -1,0 +1,7 @@
+{
+  "name": "Anticipator on Heroku!",
+  "description": "An awesome Python app",
+  "image": "heroku/python",
+  "keywords": ["python", "django" ],
+  "addons": [ "heroku-postgresql" ]
+}

@@ -17,7 +17,8 @@ import string
 
 def index(request):
     print 'index entered'
-    sid = request.session._get_or_create_session_key()
+    # sid = request.session._get_or_create_session_key()
+    sid = '123'
     lineup, top_x_tracks, playlist_name, spot_token, username = main.initialise(sid)
     # top_x_tracks, spot_token = main.initialise()
     # if spot token[0] is false (see spotify file get_token function) then there is no token in chache
