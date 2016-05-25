@@ -1,32 +1,63 @@
 {% load staticfiles %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'form/style.css' %}" />
+<!DOCTYPE html>
+<html lang = 'en'>
+<head>
+  <meta  charset="UTF-8">
+  <title> Anticipator </title>
+  <link rel="stylesheet" type="text/css" href="{% static 'form/normalize.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'form/resultstyle.css' %}" />
+  <link href='https://fonts.googleapis.com/css?family=Candal' rel='stylesheet' type='text/css'>
+</head>
 
-<header>
-  jojojo
-</header>
+
+<body>
+
+<div class="background" >
+
+  <div class="title">
+    Anticipator
+  </div>
+
+
+<div class="success">
+  <div class="one">
+    <span>Listen to</span>
+  </div>
+  <div class="playlistname">
+      <span>{{ playlist_name }}</span>
+  </div>
+  <div class="three">
+    on Spotify  </div>
+</div>
+
+
+
 
 {% if lineup != '' %}
     <ul>
     {% for artist in lineup %}
         <li>{{ artist }}</li>
-        <li>{{ artist }}</li>
     {% endfor %}
     </ul>
-    <ul>
-    {% for x in playlist_name %}
-        <li>{{ x }}</li>
-    {% endfor %}
-    </ul>
-    <ul>
-    {% if sort %}
-      sort
-      {%endif%}
-    {% if public %}
-      public
-    {%endif%}
-  </ul>
-    </ul>
+
+
+
+
 {% else %}
     <p>No lineup supplied.</p>
 {% endif %}
+
+
+</div>
+
+
+</body>
+
+
+<!-- {% if sort %}
+  sort
+  {%endif%}
+{% if public %}
+  public
+{%endif%} -->

@@ -1,0 +1,66 @@
+@font-face {
+   font-family: 'blackout';
+   src: url('../fonts/Blackout Sunrise.ttf');
+}
+
+.background{
+
+
+  padding: 30px 30px;
+  width: 100vw;
+  background-position: top;
+  background-image: url("../../static/pictures/resultbackground.jpg");
+  background-size: cover;
+  height: 900px;
+}
+
+
+ul{
+margin: 0px 0px;
+}
+
+
+.title{
+  color: white;
+  /*opacity: 0.9;*/
+  border-style: solid;
+  border-width: 2px;
+  border-color: white;
+  text-align: center;
+  font-size: 500%;
+  margin: 0px 0px;
+  font-family: blackout;
+  border-radius: 5px;
+}
+
+
+.success{
+  color: white;
+
+}
+
+.one{
+display: inline-block;
+font-family: 'Candal';
+}
+
+.playlistname{
+  display: inline-block;
+  border-style: solid;
+  font-family: blackout;
+  border-width: 2px;
+  border-color: white;
+  text-align: center;
+  font-size: 30px;
+  margin: 0px 0px;
+  border-radius: 5px;
+
+}
+
+.three{
+  display: inline-block;
+}
+
+  .listen{
+  color: white;
+  }
