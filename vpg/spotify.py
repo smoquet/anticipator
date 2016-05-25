@@ -1,20 +1,46 @@
 import sys
 import spotipy
 import spotipy.util as util
+import spotipy.oauth2 as oauth2
 from main import *
 import time
 
-
-
-def get_token(username, client_id, client_secret, redirect_uri):
+def get_token(sid, client_id, client_secret, redirect_uri):
+    # called upon in initialise function
     spotify = spotipy.Spotify()
     scope = 'playlist-modify-private'
-    token = spotipy.util.prompt_for_user_token(username, scope, client_id, client_secret, redirect_uri)
-    return token
+    # door module oauth2 aaan te roepen creeren we een object van classe SpitifyOAuth, die
+    # initieren we met de input die tussen haakjes staat en slaan we op in sp_oauth
+    sp_oauth = oauth2.SpotifyOAuth(client_id, client_secret, redirect_uri,
+        scope=scope, cache_path=".cache-" + sid )
+    # check to see if there is a cached token, by calling upon object in sp_oauth
+    token_info = sp_oauth.get_cached_token()
+    if not token_info:
+        # maak een url voor e bezoeker om heen te gaan een te authoriseren
+        auth_url = sp_oauth.get_authorize_url()
+        # return tupe with False and the redirect url in auth_url.
+        return (False, auth_url)
+    # otherwise return the token
+    return token_info
+
+def make_token(spot_response, username, client_id, client_secret, redirect_uri):
+    # gets a token from spotify and caches it
+    scope = 'playlist-modify-private'
+    sp_oauth = oauth2.SpotifyOAuth(client_id, client_secret, redirect_uri,
+        scope=scope, cache_path=".cache-" + username )
+    code = sp_oauth.parse_response_code(spot_response)
+    #gets token and caches it in
+    token_info = sp_oauth.get_access_token(code)
+    return token_info['access_token']
 
 def artist_id_list_gen(artist_list, spot_token):
     # expects artists as strings in a list
     # returns list of id's as unicode strings and internally keeps track of search failures
+
+    def remove_unicode(string):
+        import unicodedata
+        return unicodedata.normalize('NFKD', string).encode('ascii','ignore')
+
 
     def get_artist_id(name, spot_token):
         print "init get_artist_id", time.clock()
@@ -49,7 +75,10 @@ def artist_id_list_gen(artist_list, spot_token):
     # append ID id_list or name in search_failure list
     artist_id_list = []
     artis_fail_search_list = []
-    for name in artist_list:
+    x = remove_unicode(artist_list)
+    artist_list_as_type_list = x.split(',')
+
+    for name in artist_list_as_type_list:
         x = get_artist_id(name, spot_token)
         if type(x) == unicode:
             artist_id_list.append(x)
@@ -59,7 +88,6 @@ def artist_id_list_gen(artist_list, spot_token):
     return artist_id_list
 
 def tracklist_gen(artist_id_list, n, spot_token):
-    print "init tracklist_gen", time.clock()
     # expects list of artist id's and an integer for how many tracks per artists, maximum == 10!
     # returns a list of top track id's
     country_code = 'NL'
@@ -86,7 +114,6 @@ def tracklist_gen(artist_id_list, n, spot_token):
     # return 0
 
 def write_playlist(track_id_list, playlist_name, spot_token, username):
-    print "init write_playlist", time.clock()
     # writes playlist in spotify
     # initialised in main
     # returns nothing
