@@ -22,8 +22,8 @@
   width: 100vw;
   background-position: top;
   background-size: cover;
-  background-image: url("../../static/pictures/festival2.jpg");
-  height: 1000px;
+  /*background-image: url("../../static/pictures/festival2.jpg");*/
+  height: 900px;
 }
 
 
