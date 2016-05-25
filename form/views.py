@@ -17,18 +17,16 @@ import string
 
 def index(request):
     print 'index entered'
-    # sid = request.session._get_or_create_session_key()
-    sid = 'milowinterburn'
-    lineup, top_x_tracks, playlist_name, spot_token = main.initialise(sid)
+    sid = request.session._get_or_create_session_key()
+    lineup, top_x_tracks, playlist_name, spot_token, username = main.initialise(sid)
     # top_x_tracks, spot_token = main.initialise()
     # if spot token[0] is false (see spotify file get_token function) then there is no token in chache
     print spot_token
-    if type(spot_token) != dict:
-        if not spot_token[0]:
-            print 'no spot token and thus redirect to spot and then bck to cllsport'
-            # and therefore user needs to be redirected to spot_token[1], wich is the auth_url
-            #when user comes back from that he will arrive at our redirect_uri, wich is callspot
-            return redirect(spot_token[1])
+    if not spot_token[0]:
+        print 'no spot token and thus redirect to spot and then bck to cllsport'
+        # and therefore user needs to be redirected to spot_token[1], wich is the auth_url
+        #when user comes back from that he will arrive at our redirect_uri, wich is callspot
+        return redirect(spot_token[1])
 
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -36,9 +34,9 @@ def index(request):
         form = NameForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data to the variables
-            # they are used as input to the spotify api
-
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
             lineup = form.cleaned_data['lineup']
             playlist_name = form.cleaned_data['playlist_name']
             sort = form.cleaned_data['sort']
@@ -46,9 +44,9 @@ def index(request):
             template = loader.get_template('form/result.html')
 
             # process the data
-            artist_ids = spotify.artist_id_list_gen(lineup, spot_token)
-            track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token)
-            spotify.write_playlist(track_id_list, playlist_name, spot_token, username)
+            artist_ids = spotify.artist_id_list_gen(lineup, spot_token[1])
+            track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token[1])
+            spotify.write_playlist(track_id_list, playlist_name, spot_token[1], username)
 
 
             # SUCCES render the it's all good result.html
@@ -69,7 +67,6 @@ def index(request):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = NameForm()
-
     return render(request, 'form/index.html', {'form': form})
 
 
@@ -120,8 +117,10 @@ def vpgtest(request):
         if not spot_token[0]:
             # and therefore user needs to be redirected to spot_token[1], wich is the auth_url
             return redirect(spot_token[1])
+    artist_ids = spotify.artist_id_list_gen(lineup, spot_token)
+    track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token)
     template = loader.get_template('form/result.html')
     context = {
-        'lineup': lineup
+        'lineup': track_id_list
     }
     return HttpResponse(template.render(context, request))

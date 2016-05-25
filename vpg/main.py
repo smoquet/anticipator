@@ -12,6 +12,9 @@ def initialise(sid):
     top_x_set, client_id, client_secret, redirect_uri = filemanager.read_settings(settings_file)
     # Pass sid along for cache storage
     spot_token = spotify.get_token(sid, client_id, client_secret, redirect_uri)
+
+    username = spotify.get_username(spot_token[1]) if spot_token[0] else ''
+    
     # top_x_tracks = arguments[1] if arguments[1] else int(top_x_set)
     top_x_tracks = int(top_x_set)
     # lineup = lineup_parser(arguments[0])
@@ -20,7 +23,7 @@ def initialise(sid):
     # playlist_name = arguments[2] if arguments[2] else arguments[0][:-4]
     playlist_name = 'henk'
     # print "exit initialise", time.clock()
-    return lineup, top_x_tracks, playlist_name, spot_token
+    return lineup, top_x_tracks, playlist_name, spot_token, username
 
 def main(args):
     print "init main", time.clock()
