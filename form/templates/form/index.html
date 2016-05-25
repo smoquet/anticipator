@@ -1,7 +1,35 @@
-<form action="/" method="post">
-    {% csrf_token %}
-    <table>
-     {{form.as_table}}
-   </table>
-    <input type="submit" value="Submit" />
-</form>
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang = 'en'>
+<head>
+		<meta  charset="UTF-8">
+		<title> Anticipator </title>
+    <link rel="stylesheet" type="text/css" href="{% static 'form/normalize.css' %}" />
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'form/style.css' %}" />
+</head>
+
+<body>
+
+<div class = 'background'>
+
+<div class="title">
+  Anticipator
+</div>
+
+<div class = 'form'>
+  <form action="/" method="post">
+      {% csrf_token %}
+      <table>
+       {{form.as_table}}
+     </table>
+     <div id = 'submit'>
+      <input type="image" src='../../static/pictures/play.png' value="Submit" class = 'image_submit'/>
+    </div>
+  </form>
+</div>
+
+</div>
+
+</body>

@@ -1,0 +1,122 @@
+/*imports*/
+@font-face {
+   font-family: 'blackout';
+   src: url('../fonts/Blackout Sunrise.ttf');
+}
+@pic{
+   src: url('../../static/pictures/festival.jpg');
+}
+
+/*background*/
+
+/*body {
+    background-image: url('../../static/pictures/festival.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: bottom;
+}*/
+
+
+.background{
+  padding: 30px 30px;
+  width: 100vw;
+  background-position: top;
+  background-size: cover;
+  background-image: url("../../static/pictures/festival2.jpg");
+  height: 1000px;
+}
+
+
+/*header*/
+
+
+
+.title{
+  color: white;
+  /*opacity: 0.9;*/
+  border-style: solid;
+  border-width: 2px;
+  border-color: white;
+  text-align: center;
+  font-size: 500%;
+  margin: 0px 0px;
+  font-family: blackout;
+  border-radius: 5px;
+}
+
+/*form*/
+
+label{
+  font-family: blackout;
+  font-size: 35px;
+  position: relative;
+  display: inline-block;
+  border-style: solid;
+  border-width: 2px;
+  border-color: white;
+  margin-right: 50px;
+  padding-top: 8px;
+  padding-left: 8px;
+  padding-right: 4px;
+  padding-bottom: 2px;
+  border-radius: 2px;
+
+}
+
+.form{
+  color: white;
+  /*border-style: solid;
+  border-color: green;*/
+  text-align: center;
+  padding: 3%;
+
+}
+
+table{
+  color: white;
+  display: inline-block;
+  /*border-style: solid;
+  border-color: black;*/
+  margin: 2%;
+}
+
+
+#submit{
+  /*border-style: solid;
+  border-color: black;*/
+  margin: 2%;
+}
+
+
+.intfield{
+  background-color: transparent;
+  border-style: solid;
+  border-color: white;
+  width: 40px;
+  height: 40px;
+  transition: ease-in 0.5s;
+}
+.intfield:hover{
+  width: 45px;
+}
+
+.checkbox input{
+  display: none;
+  background-color: black
+}
+
+.charfield{
+  background-color: transparent;
+  border-style: solid;
+  border-color: white;
+  width: 190px;
+  height: 40px;
+  transition: ease-in 0.5s;
+}
+.charfield:hover{
+  width: 200px;
+}
+
+.image_submit{
+  width: 65px;
+}

@@ -36,9 +36,9 @@ def index(request):
         form = NameForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
+            # process the data in form.cleaned_data to the variables
+            # they are used as input to the spotify api
+
             lineup = form.cleaned_data['lineup']
             playlist_name = form.cleaned_data['playlist_name']
             sort = form.cleaned_data['sort']
@@ -69,6 +69,7 @@ def index(request):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = NameForm()
+
     return render(request, 'form/index.html', {'form': form})
 
 
