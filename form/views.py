@@ -47,6 +47,7 @@ def index(request):
             # process the data
             artist_ids = spotify.artist_id_list_gen(lineup, spot_token)
             track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token)
+            username = 'milowinterburn'
             spotify.write_playlist(track_id_list, playlist_name, spot_token, username)
 
 

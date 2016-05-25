@@ -21,7 +21,7 @@ def get_token(sid, client_id, client_secret, redirect_uri):
         # return tupe with False and the redirect url in auth_url.
         return (False, auth_url)
     # otherwise return the token
-    return token_info
+    return token_info['access_token']
 
 def make_token(spot_response, username, client_id, client_secret, redirect_uri):
     # gets a token from spotify and caches it
