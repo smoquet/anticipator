@@ -9,7 +9,7 @@
   padding: 30px 30px;
   width: 100vw;
   background-position: top;
-  background-image: url("../../static/pictures/resultbackground.jpg");
+  background-image: url("../pictures/resultbackground.jpg");
   background-size: cover;
   height: 900px;
 }

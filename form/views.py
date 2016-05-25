@@ -47,7 +47,7 @@ def index(request):
             # process the data
             artist_ids = spotify.artist_id_list_gen(lineup, spot_token[1])
             track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token[1])
-            # spotify.write_playlist(track_id_list, playlist_name, spot_token[1], username)
+            spotify.write_playlist(track_id_list, playlist_name, spot_token[1], username)
 
 
             # SUCCES render the it's all good result.html
@@ -78,7 +78,8 @@ def callspot(request):
 
     # gets user with a token and caches it in the server
     spot_response = HttpRequest.build_absolute_uri(request)
-    sid = request.session._get_or_create_session_key()
+    # sid = request.session._get_or_create_session_key()
+    sid = '123'
     spot_token = spotify.make_token(spot_response, sid, client_id, client_secret, redirect_uri)
 
     return redirect(index)
