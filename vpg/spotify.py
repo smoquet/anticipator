@@ -21,7 +21,13 @@ def get_token(sid, client_id, client_secret, redirect_uri):
         # return tupe with False and the redirect url in auth_url.
         return (False, auth_url)
     # otherwise return the token
-    return token_info
+    return (True, token_info['access_token'])
+
+def get_username(spot_token):
+    spotify = spotipy.Spotify(auth=spot_token)
+    username = spotify.current_user()['id']
+
+    return username
 
 def make_token(spot_response, username, client_id, client_secret, redirect_uri):
     # gets a token from spotify and caches it
@@ -77,6 +83,7 @@ def artist_id_list_gen(artist_list, spot_token):
     artis_fail_search_list = []
     x = remove_unicode(artist_list)
     artist_list_as_type_list = x.split(',')
+
 
     for name in artist_list_as_type_list:
         x = get_artist_id(name, spot_token)
