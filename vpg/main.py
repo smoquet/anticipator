@@ -1,20 +1,23 @@
+import filemanager
+import os
+import random
 import sys
 import string
-import time
-import random
 import spotify
-import filemanager
+import time
 
 def initialise(sid):
 #must eventully expect arguments from form
     # must ventueally return lineup as list of strings, top tracks and playlist_name, sort+public bools, token, username
     settings_file = 'vpg/voorpretgen.ini'
     top_x_set, client_id, client_secret, redirect_uri = filemanager.read_settings(settings_file)
+    if os.environ.get('SPOTIPY_REDIRECT_URI'):
+        redirect_uri = os.environ.get('SPOTIPY_REDIRECT_URI')
     # Pass sid along for cache storage
     spot_token = spotify.get_token(sid, client_id, client_secret, redirect_uri)
 
     username = spotify.get_username(spot_token[1]) if spot_token[0] else ''
-    
+
     # top_x_tracks = arguments[1] if arguments[1] else int(top_x_set)
     top_x_tracks = int(top_x_set)
     # lineup = lineup_parser(arguments[0])

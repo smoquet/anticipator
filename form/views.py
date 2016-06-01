@@ -7,6 +7,7 @@ from django.shortcuts import redirect
 
 from .forms import NameForm
 from vpg import *
+import os
 import random
 import string
 # import vpg.filemanager
@@ -75,7 +76,8 @@ def callspot(request):
     print 'callspot entered'
     settings_file = 'vpg/voorpretgen.ini'
     top_x_set, client_id, client_secret, redirect_uri = filemanager.read_settings(settings_file)
-
+    if os.environ.get('SPOTIPY_REDIRECT_URI'):
+        redirect_uri = os.environ.get('SPOTIPY_REDIRECT_URI')
     # gets user with a token and caches it in the server
     spot_response = HttpRequest.build_absolute_uri(request)
     # sid = request.session._get_or_create_session_key()
