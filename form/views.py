@@ -1,3 +1,5 @@
+from form.models import Events
+
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.http import HttpRequest
@@ -43,6 +45,10 @@ def index(request):
             sort = form.cleaned_data['sort']
             public = form.cleaned_data['public']
             template = loader.get_template('form/result.html')
+            databaseinput = form.cleaned_data['databaseinput']
+
+            event = Events(name=databaseinput)
+            event.save()
 
             # process the data
             artist_ids = spotify.artist_id_list_gen(lineup, spot_token[1])
@@ -60,7 +66,10 @@ def index(request):
                 'sort':sort,
                 'public':public,
                 'top_x_tracks':top_x_tracks,
+                'databaseinput':event
+
             }
+
 
 
 

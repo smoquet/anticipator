@@ -4,4 +4,4 @@ from django.db import models
 
 class Events(models.Model):
     # By default, Django gives each model an ID
-    event-name = models.Charfield(max_length=100)
+    event_name = models.CharField(max_length=100)
