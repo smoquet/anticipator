@@ -6,27 +6,23 @@ import string
 import spotify
 import time
 
-def initialise(sid):
-#must eventully expect arguments from form
-    # must ventueally return lineup as list of strings, top tracks and playlist_name, sort+public bools, token, username
+def initialise():
+    '''reads settings file and fills vars with the read values and some defaults'''
     settings_file = 'vpg/voorpretgen.ini'
     top_x_set, client_id, client_secret, redirect_uri = filemanager.read_settings(settings_file)
+    top_x_tracks = int(top_x_set)
+    return top_x_tracks, client_id, client_secret, redirect_uri
+
+def init_spot(redirect_uri, client_id, client_secret, sid):
+    '''gets spotify token and username'''
+    # on Heroku the SPOTIPY_REDIRECT_URI env var is set to the production url
+    # the following code ensures that is used
     if os.environ.get('SPOTIPY_REDIRECT_URI'):
         redirect_uri = os.environ.get('SPOTIPY_REDIRECT_URI')
-    # Pass sid along for cache storage
     spot_token = spotify.get_token(sid, client_id, client_secret, redirect_uri)
-
+    # if we have a spot_token, get the username
     username = spotify.get_username(spot_token[1]) if spot_token[0] else ''
-
-    # top_x_tracks = arguments[1] if arguments[1] else int(top_x_set)
-    top_x_tracks = int(top_x_set)
-    # lineup = lineup_parser(arguments[0])
-    lineup = ['henk', 'angerfist']
-    # dit kan nog mooier, breekt nu als de file geen extensie heeft
-    # playlist_name = arguments[2] if arguments[2] else arguments[0][:-4]
-    playlist_name = 'henk'
-    # print "exit initialise", time.clock()
-    return lineup, top_x_tracks, playlist_name, spot_token, username
+    return spot_token, username
 
 def main(args):
     print "init main", time.clock()

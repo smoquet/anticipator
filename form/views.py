@@ -20,12 +20,12 @@ def index(request):
     print 'index entered'
     # sid = request.session._get_or_create_session_key()
     sid = '123'
-    lineup, top_x_tracks, playlist_name, spot_token, username = main.initialise(sid)
-    # top_x_tracks, spot_token = main.initialise()
-    # if spot token[0] is false (see spotify file get_token function) then there is no token in chache
-    print spot_token
+    top_x_tracks, client_id, client_secret, redirect_uri = main.initialise()
+    spot_token, username = main.init_spot(redirect_uri, client_id, client_secret, sid)
+
+    # if spot token[0] is false (see spotify file get_token function) then there is no token in cache
     if not spot_token[0]:
-        print 'no spot token and thus redirect to spot and then bck to cllsport'
+        print 'no spot token and thus redirect to spot and then back to callspot'
         # and therefore user needs to be redirected to spot_token[1], wich is the auth_url
         #when user comes back from that he will arrive at our redirect_uri, wich is callspot
         return redirect(spot_token[1])
@@ -74,43 +74,18 @@ def index(request):
 
 def callspot(request):
     print 'callspot entered'
-    settings_file = 'vpg/voorpretgen.ini'
-    top_x_set, client_id, client_secret, redirect_uri = filemanager.read_settings(settings_file)
-    if os.environ.get('SPOTIPY_REDIRECT_URI'):
-        redirect_uri = os.environ.get('SPOTIPY_REDIRECT_URI')
-    # gets user with a token and caches it in the server
-    spot_response = HttpRequest.build_absolute_uri(request)
+
     # sid = request.session._get_or_create_session_key()
     sid = '123'
+    top_x_tracks, client_id, client_secret, redirect_uri = main.initialise()
+
+    # the build_absolute_uri method from class HttpRequest retrieves the string given by spotify to user
+    # while redrecting back to us, this is stored in spot_response
+    spot_response = HttpRequest.build_absolute_uri(request)
+    # gets user with a token and caches it in the server
     spot_token = spotify.make_token(spot_response, sid, client_id, client_secret, redirect_uri)
 
     return redirect(index)
-
-    # a user without cache_token arrives from oauth, wich was given to him in vpgtest
-    # in request wich is an object, wich comes from the browers, we find the spotify responseURL and
-    # lots of ohter info, like request type (post, get, etc) and other shite
-
-    # lineup, top_x_tracks, playlist_name, spot_token, username = main.initialise()
-    # settings_file = 'vpg/voorpretgen.ini'
-
-    # the build_absolute_uri method from class HttpRequest retrieves the stri ng given by spotify to user
-    # while redrecting back to us, this is stored in spot_response
-    # spot_response = HttpRequest.build_absolute_uri(request)
-
-    # # read settings
-    # top_x_set, client_id, client_secret, redirect_uri = filemanager.read_settings(settings_file)
-    # spot_token = spotify.make_token(spot_response, 'milowinterburn', client_id, client_secret, redirect_uri)
-    # #make_token
-
-    # saev in cache
-
-
-    #
-    # template = loader.get_template('form/result.html')
-    # context = {
-    #     'lineup': track_id_list
-    # }
-    # return HttpResponse(template.render(context, request))
 
 def vpgtest(request):
     sid = request.session._get_or_create_session_key()
