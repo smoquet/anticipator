@@ -62,6 +62,8 @@ def index(request):
                 'top_x_tracks':top_x_tracks,
             }
 
+
+
             return HttpResponse(template.render(context, request))
             # return HttpResponseRedirect('/')
 
