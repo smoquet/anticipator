@@ -33,7 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'form.apps',
     'vpg',
-    'events',
+    'form',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

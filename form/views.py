@@ -1,4 +1,4 @@
-from form.models import Events
+from form.models import *
 
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -47,7 +47,7 @@ def index(request):
             template = loader.get_template('form/result.html')
             databaseinput = form.cleaned_data['databaseinput']
 
-            event = Events(name=databaseinput)
+            event = Events(event_name=databaseinput)
             event.save()
 
             # process the data
