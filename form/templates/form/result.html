@@ -28,8 +28,20 @@
       <span>{{ playlist_name }}</span>
   </div>
   <div class="three">
-    on Spotify  </div>
+    on Spotify
+  </div>
+  <div class="db_output">
+    {{event_name}}
+  </div>
+<div class="one"> llololo
+  {% for artist in line_up %}
+      <li>{{ artist }} oooo</li>
+  {% endfor %}
 </div>
+
+</div>
+
+
 
 
 
@@ -37,7 +49,7 @@
 {% if lineup != '' %}
     <ul>
     {% for artist in lineup %}
-        <li>{{ artist }}</li>
+        <li>{{ artist }} iiii</li>
     {% endfor %}
     </ul>
 
