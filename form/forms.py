@@ -10,5 +10,5 @@ class NameForm(forms.Form):
     public = forms.BooleanField(label='Public playlist', required=False, initial = True)
     top_x_tracks = forms.IntegerField(label='Number of tracks per artist', required=False , initial = 5, max_value = 10, min_value = 1)
     db_input_test_name = forms.CharField(label='db_input_test_name', max_length=200)
-    db_input_test_timestamp = forms.DateField(input_formats=ACCEPTED_FORMATS)
+    db_input_test_date = forms.DateField(input_formats=ACCEPTED_FORMATS)
     db_input_test_line_up = forms.CharField(label='db_input_test_line_up')

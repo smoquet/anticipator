@@ -46,12 +46,12 @@ def index(request):
             public = form.cleaned_data['public']
             template = loader.get_template('form/result.html')
             db_input_test_name = form.cleaned_data['db_input_test_name']
-            db_input_test_timestamp = form.cleaned_data['db_input_test_timestamp']
+            db_input_test_date = form.cleaned_data['db_input_test_date']
             db_input_test_line_up = form.cleaned_data['db_input_test_line_up']
 
 
             # check to see if the database works by printing it to reult screen part 1
-            event = Events(event_name=db_input_test_name, timestamp=db_input_test_timestamp, line_up=db_input_test_line_up )
+            event = Events(name=db_input_test_name, date=db_input_test_date, line_up=db_input_test_line_up )
             event.save()
 
             # process the data

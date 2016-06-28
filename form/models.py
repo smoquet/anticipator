@@ -33,6 +33,6 @@ class SeparatedValuesField(models.TextField):
 
 class Events(models.Model):
     # By default, Django gives each model an ID
-    event_name = models.CharField(max_length=100)
-    timestamp = models.DateField()
+    name = models.CharField(max_length=100)
+    date = models.DateField()
     line_up = SeparatedValuesField()
