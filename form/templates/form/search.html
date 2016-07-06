@@ -14,8 +14,26 @@
 
 <div class="background" >
   <div class="title">
-    Anticipator
+    Anticipator  {{ event_query }}
   </div>
+
+  <div class = 'form'>
+    <form action="/search" method="post">
+      {% csrf_token %}
+        <table>
+         {{form.as_table}}
+       </table>
+       <div id = 'submit'>
+        <input type="image" src='../../static/pictures/play.png' value="Submit" class = 'image_submit'/>
+      </div>
+    </form>
+  </div>
+
+
+
+
 </div>
+
+
 
 </body>

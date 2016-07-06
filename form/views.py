@@ -7,7 +7,7 @@ from django.template import loader
 from django.shortcuts import render
 from django.shortcuts import redirect
 
-from .forms import NameForm
+from .forms import NameForm, DatabaseLookupForm
 from vpg import *
 import random
 import string
@@ -19,8 +19,28 @@ import string
 
 
 def search(request):
-    return render(request, 'form/search.html')
-    # if request.method == 'POST'
+    print 'search entered'
+    if request.method == 'POST':
+        print 'search POST entered'
+        # create a form instance and populate it with data from the request:
+        form = DatabaseLookupForm(request.POST)
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            event_query = form.cleaned_data['event_query']
+
+            template = loader.get_template('form/search.html')
+
+            context = { 'event_query':event_query}
+
+            return HttpResponse(template.render(context, request))
+
+    form = DatabaseLookupForm()
+    return render(request, 'form/search.html', {'form': form})
+
+
+
+
+
 
 
 def index(request):
