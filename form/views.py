@@ -33,19 +33,25 @@ def search(request):
             # search for the query in the db
             search_results = Events.objects.filter(name=event_query)
             search_results_values = search_results.values()
-            search_result_list = []
+            search_result_list_of_names = []
+            search_result_list_of_tracks_temp = []
             # create a list with the names of events as results
             for x in search_results_values:
-                search_result_list.append(x['name'])
+                search_result_list_of_names.append(x['name'])
+                search_result_list_of_tracks_temp.append(x['line_up'])
+
+            for s in search_result_list_of_tracks_temp:
+                print s.split(';')
+
 
 
             # assign search.html in template variable
             template = loader.get_template('form/search.html')
             # fill in context
-            context = { 'event_query':event_query, 'search_result_list':search_result_list}
+            context = { 'event_query':event_query, 'search_result_list':search_result_list_of_names}
 
             return HttpResponse(template.render(context, request))
-    # if the form is not filled in is thus GET           
+    # if the form is not filled in is thus GET
     form = DatabaseLookupForm()
     return render(request, 'form/search.html', {'form': form})
 

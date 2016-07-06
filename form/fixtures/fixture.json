@@ -4,7 +4,7 @@
     "pk": 1,
     "fields": {
       "date": "2001-01-02",
-      "line_up": "abi",
+      "line_up": "track1;track2;track3;track4",
       "name": "rabbid"
     }
   },
@@ -14,7 +14,7 @@
     "pk": 2,
     "fields": {
       "date": "2001-01-03",
-      "line_up": "john",
+      "line_up": "track1;track2;track3;track4",
       "name": "rabbid"
     }
   },
@@ -34,7 +34,7 @@
     "pk": 4,
     "fields": {
       "date": "2001-01-05",
-      "line_up": "tuts",
+      "line_up": "track1;track2;track3;track4",
       "name": "fissa"
     }
   }
