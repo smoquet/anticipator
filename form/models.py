@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+import json
 
 # Custom field created for storing lists in the field
 # for tests to see the input in the db
@@ -30,9 +31,8 @@ class SeparatedValuesField(models.TextField):
 
 
 
-
 class Events(models.Model):
-    # By default, Django gives each model an ID
+    # By default, Django gives each model instantance an ID
     name = models.CharField(max_length=100)
     date = models.DateField()
     line_up = SeparatedValuesField()
