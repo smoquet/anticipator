@@ -17,6 +17,12 @@ import string
 # from filemanager import *
 # from spotify import *
 
+
+def search(request):
+    return render(request, 'form/search.html')
+    # if request.method == 'POST'
+
+
 def index(request):
     print 'index entered'
     # sid = request.session._get_or_create_session_key()
@@ -51,8 +57,9 @@ def index(request):
 
 
             # check to see if the database works by printing it to reult screen part 1
-            event = Events(name=db_input_test_name, date=db_input_test_date, line_up=db_input_test_line_up )
-            event.save()
+            eventinstance = Events(name=db_input_test_name, date=db_input_test_date, line_up=db_input_test_line_up )
+            eventinstance.save()
+
 
             # process the data
             artist_ids = spotify.artist_id_list_gen(lineup, spot_token[1])
@@ -71,11 +78,9 @@ def index(request):
                 'public':public,
                 'top_x_tracks':top_x_tracks,
                 # check to see if the database works by printing it to reult screen part 2
-                'databaseinput':event,
+                'databaseinput':eventinstance,
                 #form output is nog een string
                 'line_up':db_input_test_line_up
-
-
             }
 
 
