@@ -27,10 +27,11 @@ def search(request):
         if form.is_valid():
             # process the data in form.cleaned_data as required
             event_query = form.cleaned_data['event_query']
+            whole_database = Events.objects.all()
 
             template = loader.get_template('form/search.html')
 
-            context = { 'event_query':event_query}
+            context = { 'event_query':event_query, 'whole_database':whole_database}
 
             return HttpResponse(template.render(context, request))
 
