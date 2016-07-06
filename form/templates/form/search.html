@@ -14,7 +14,7 @@
 
 <div class="background" >
   <div class="title">
-    Anticipator  {{ whole_database }}
+    Anticipator
   </div>
 
   <div class = 'form'>
@@ -30,4 +30,22 @@
   </div>
 
 </div>
+
+</div>
+
+{% if search_results != '' %}
+    <ul>
+{% for event_name in search_result_list %}
+        <li>{{ event_name }}</li>
+{% endfor %}
+    </ul>
+
+{% else %}
+    <p>No result.</p>
+{% endif %}
+
+</div>
+
+
+
 </body>

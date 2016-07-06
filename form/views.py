@@ -20,21 +20,32 @@ import string
 
 def search(request):
     print 'search entered'
+    # if the form is filled in and method is thus POST
     if request.method == 'POST':
         print 'search POST entered'
         # create a form instance and populate it with data from the request:
         form = DatabaseLookupForm(request.POST)
         if form.is_valid():
+            print 'form is valid'
             # process the data in form.cleaned_data as required
             event_query = form.cleaned_data['event_query']
-            whole_database = Events.objects.all()
 
+            # search for the query in the db
+            search_results = Events.objects.filter(name=event_query)
+            search_results_values = search_results.values()
+            search_result_list = []
+            # create a list with the names of events as results
+            for x in search_results_values:
+                search_result_list.append(x['name'])
+
+
+            # assign search.html in template variable
             template = loader.get_template('form/search.html')
-
-            context = { 'event_query':event_query, 'whole_database':whole_database}
+            # fill in context
+            context = { 'event_query':event_query, 'search_result_list':search_result_list}
 
             return HttpResponse(template.render(context, request))
-
+    # if the form is not filled in is thus GET           
     form = DatabaseLookupForm()
     return render(request, 'form/search.html', {'form': form})
 
