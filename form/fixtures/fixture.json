@@ -1,0 +1,11 @@
+[
+  {
+    "model": "form.events",
+    "pk": 1,
+    "fields": {
+      "date": "2001-01-01",
+      "line_up": "abi",
+      "name": "fusion"
+    }
+  }
+]
