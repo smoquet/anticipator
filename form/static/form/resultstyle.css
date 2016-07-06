@@ -19,7 +19,27 @@ ul{
 margin: 0px 0px;
 }
 
+li{
+  color: white;
+  /*opacity: 0.9;*/
+  border-style: solid;
+  border-width: 2px;
+  border-color: white;
+  text-align: center;
+  font-size: 200%;
+  margin: 0px 0px;
+  font-family: blackout;
+  border-radius: 5px;
 
+}
+
+.form{
+  display: inline-block;
+}
+.results{
+  display: inline-block;
+  width: 30%;
+}
 .title{
   color: white;
   /*opacity: 0.9;*/

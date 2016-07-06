@@ -29,22 +29,25 @@
     </form>
   </div>
 
-</div>
 
-</div>
 
+<div class = 'results'>
 {% if search_results != '' %}
     <ul>
 {% for event_name in search_result_list %}
-        <li>{{ event_name }}</li>
+        <li><button type="button">{{ event_name }}</button></li>
 {% endfor %}
     </ul>
-
 {% else %}
     <p>No result.</p>
 {% endif %}
+</div>
+
 
 </div>
+
+</div>
+
 
 
 

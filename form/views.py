@@ -19,6 +19,18 @@ import string
 
 
 def search(request):
+    '''
+    if get request, then show search form
+    if form is filled in, = POST,
+            if there is no result, then search in partyflock and save in DB
+            if there are results then return the search results from the DB
+                show the own db results, and give option to search in partyflock anyway if
+                desired result is not there.
+            return the results
+            make possible to click on result to get the playlist in your Spotify
+    '''
+
+
     print 'search entered'
     # if the form is filled in and method is thus POST
     if request.method == 'POST':
@@ -27,23 +39,36 @@ def search(request):
         form = DatabaseLookupForm(request.POST)
         if form.is_valid():
             print 'form is valid'
-            # process the data in form.cleaned_data as required
+            # assign the form input to the variable event_query
             event_query = form.cleaned_data['event_query']
-
             # search for the query in the db
             search_results = Events.objects.filter(name=event_query)
             search_results_values = search_results.values()
+            # initialise result list
             search_result_list_of_names = []
-            search_result_list_of_tracks_temp = []
+            # search_result_list_of_tracks_temp = []
             # create a list with the names of events as results
             for x in search_results_values:
                 search_result_list_of_names.append(x['name'])
-                search_result_list_of_tracks_temp.append(x['line_up'])
+                # search_result_list_of_tracks_temp.append(x['line_up'])
 
-            for s in search_result_list_of_tracks_temp:
-                print s.split(';')
+            # if there are no results in our db search partyflock and save result in db
+            if len(search_result_list_of_names) == 0:
+                partyflock_result = ['eventname', '2001-02-02', 'artist1;artist2;artist3']
+                eventinstance = Events(name='eventname', date='2001-02-02', line_up='artist1;artist2;artist3' )
+                eventinstance.save()
+                # then return the result from the db again
+                search_results = Events.objects.filter(name='eventname')
+                search_results_values = search_results.values()
+                # initialise result list
+                search_result_list_of_names = []
+                # search_result_list_of_tracks_temp = []
+                # create a list with the names of events as results
+                for x in search_results_values:
+                    search_result_list_of_names.append(x['name'])
 
-
+            # for s in search_result_list_of_tracks_temp:
+            #     print s.split(';')
 
             # assign search.html in template variable
             template = loader.get_template('form/search.html')
@@ -51,6 +76,8 @@ def search(request):
             context = { 'event_query':event_query, 'search_result_list':search_result_list_of_names}
 
             return HttpResponse(template.render(context, request))
+
+
     # if the form is not filled in is thus GET
     form = DatabaseLookupForm()
     return render(request, 'form/search.html', {'form': form})
