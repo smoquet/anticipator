@@ -1,8 +1,8 @@
 from Naked.toolshed.shell import execute_js
 
 mode = 'eventsearch'
-query = 'prspct xl'
-num = 7
+query = 'frenchcore'
+num = 20
 args = mode + ' "' + query + '" ' + str(num)
 
 success = execute_js('event.js', args)

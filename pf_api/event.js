@@ -22,12 +22,12 @@ if (mode == 'eventsearch') {
   var searched_event = process.argv[3].split(' ').join('%');
 
   var headers = {
-    'Pf-ResultWish': 'party(name='+searched_event+'%,stamp<'+moment.utc().unix()+')'
+    'Pf-ResultWish': 'party(name='+searched_event+'%,stamp<'+(moment.utc().unix() + 63072000)+')'
   };
 
   console.log(headers);
 
-  var event = partyflockInstance.party.search(process.argv[3], headers).then(function(res) {
+  var event = partyflockInstance.party.search(searched_event, headers).then(function(res) {
   // var event = partyflockInstance.party.search('unlocked').then(function(res) {
     // Returns array with party Objects
     // process.stdout.write(Json(arguments[0].party.party.slice(-4)))
