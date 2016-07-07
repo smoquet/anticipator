@@ -16,7 +16,7 @@
 <div class="background" >
 
   <div class="title">
-    Anticipator
+    Anticipator result.html
   </div>
 
 
@@ -39,12 +39,21 @@
   {% endfor %}
 </div>
 
+<div class = 'form'>
+  <form action="/exit" method="post">
+      {% csrf_token %}
+      <table>
+       {{form.as_table}}
+     </table>
+     <div id = 'submit'>
+      <input type="image" src='../../static/pictures/play.png' value="Submit" class = 'image_submit'/>
+    </div>
+  </form>
 </div>
 
 
 
-
-
+</div>
 
 {% if lineup != '' %}
     <ul>
@@ -53,15 +62,15 @@
     {% endfor %}
     </ul>
 
-
-
-
 {% else %}
     <p>No lineup supplied.</p>
 {% endif %}
 
 
 </div>
+
+
+
 
 
 </body>

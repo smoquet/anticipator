@@ -18,24 +18,17 @@ import string
 # from spotify import *
 
 
-def search(request):
+def index(request):
+    print 'index entered'
     '''
-    if get request, then show search form
-    if form is filled in, = POST,
-            if there is no result, then search in partyflock and save in DB
-            if there are results then return the search results from the DB
-                show the own db results, and give option to search in partyflock anyway if
-                desired result is not there.
-            return the results
-            make possible to click on result to get the playlist in your Spotify
+    asks user for event_query search and looks up the results in the DB
+    if no result, then look in Partyflock and store results in db, then look again
+    ??? make possible to click on result to get the playlist in your Spotify???
     '''
 
-
-    print 'search entered'
-    # if the form is filled in and method is thus POST
     if request.method == 'POST':
         print 'search POST entered'
-        # create a form instance and populate it with data from the request:
+        # create the searchform instance and populate it with data from the request:
         form = DatabaseLookupForm(request.POST)
         if form.is_valid():
             print 'form is valid'
@@ -52,7 +45,9 @@ def search(request):
                 search_result_list_of_names.append(x['name'])
                 # search_result_list_of_tracks_temp.append(x['line_up'])
 
-            # if there are no results in our db search partyflock and save result in db
+            '''
+             Partyflock lookup: if there are no results in our db, search partyflock and save result in db
+            '''
             if len(search_result_list_of_names) == 0:
                 partyflock_result = ['eventname', '2001-02-02', 'artist1;artist2;artist3']
                 eventinstance = Events(name='eventname', date='2001-02-02', line_up='artist1;artist2;artist3' )
@@ -67,11 +62,8 @@ def search(request):
                 for x in search_results_values:
                     search_result_list_of_names.append(x['name'])
 
-            # for s in search_result_list_of_tracks_temp:
-            #     print s.split(';')
-
             # assign search.html in template variable
-            template = loader.get_template('form/search.html')
+            template = loader.get_template('form/index.html')
             # fill in context
             context = { 'event_query':event_query, 'search_result_list':search_result_list_of_names}
 
@@ -80,16 +72,43 @@ def search(request):
 
     # if the form is not filled in is thus GET
     form = DatabaseLookupForm()
-    return render(request, 'form/search.html', {'form': form})
+    return render(request, 'form/index.html', {'form': form})
 
 
 
+def result(request):
+    '''
+    NOT IMPLEMENTED YET!
+    This function gets the event name, source and source_id
+    and asks for some variable inputs: top_x_tracks, playlist name, etc
+    then gives this to the exit view
+    '''
+    print 'result request = ' , request.POST
+
+    # accept the request
+    query_object = request.POST
+    # parse it
+    event_name = query_object.__getitem__('name')
+
+    # ask for more input in the form
+    form = NameForm()
+    # and pass it all to exit
+    context =   {'event_name': event_name}
+    return render(request, 'form/result.html', {'form': NameForm})
+    # return render(request, 'form/result.html')
 
 
+def exit(request):
+    '''
+    this gets the post request from the NameForm in result view and processes the results
+    this is where the magic happens
+    '''
 
-
-def index(request):
-    print 'index entered'
+    '''
+    MOET DIT HIER?
+    create session
+    '''
+    '''
     # sid = request.session._get_or_create_session_key()
     sid = '123'
     lineup, top_x_tracks, playlist_name, spot_token, username = main.initialise(sid)
@@ -101,30 +120,33 @@ def index(request):
         # and therefore user needs to be redirected to spot_token[1], wich is the auth_url
         #when user comes back from that he will arrive at our redirect_uri, wich is callspot
         return redirect(spot_token[1])
+    '''
 
-    # if this is a POST request we need to process the form data
+    '''
+    rest van de view
+    '''
+
+
+    '''
+    if the NameForm has been filled in implement, parse the data and give to exit
+    '''
+
+
+
+    '''
     if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
         form = NameForm(request.POST)
+        # create a form instance and populate it with data from the request: to be able to parse the input
+        print 'exit request = ', request.POST
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
             # ...
             # redirect to a new URL:
-            lineup = form.cleaned_data['lineup']
             playlist_name = form.cleaned_data['playlist_name']
-            sort = form.cleaned_data['sort']
             public = form.cleaned_data['public']
+
             template = loader.get_template('form/result.html')
-            db_input_test_name = form.cleaned_data['db_input_test_name']
-            db_input_test_date = form.cleaned_data['db_input_test_date']
-            db_input_test_line_up = form.cleaned_data['db_input_test_line_up']
-
-
-            # check to see if the database works by printing it to reult screen part 1
-            eventinstance = Events(name=db_input_test_name, date=db_input_test_date, line_up=db_input_test_line_up )
-            eventinstance.save()
-
 
             # process the data
             artist_ids = spotify.artist_id_list_gen(lineup, spot_token[1])
@@ -147,18 +169,12 @@ def index(request):
                 #form output is nog een string
                 'line_up':db_input_test_line_up
             }
-
-
-
-
             return HttpResponse(template.render(context, request))
             # return HttpResponseRedirect('/')
+    '''
 
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = NameForm()
-    return render(request, 'form/index.html', {'form': form})
-
+    print 'exit request = ' , request.POST
+    return render(request, 'form/exit.html')
 
 def callspot(request):
     print 'callspot entered'
