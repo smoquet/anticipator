@@ -12,8 +12,8 @@ var partyflockInstance = new Partyflock(consumerKey, consumerSecret, 'partyflock
 // })
 
 process.argv.forEach(function (val, index, array) {
-  console.log(index + ': ' + val);
-  console.log(typeof(val));
+  // console.log(index + ': ' + val);
+  // console.log(typeof(val));
 });
 
 var mode = process.argv[2]
@@ -22,23 +22,33 @@ if (mode == 'eventsearch') {
   var searched_event = process.argv[3].split(' ').join('%');
 
   var headers = {
-    'Pf-ResultWish': 'party(name='+searched_event+'%,stamp<'+(moment.utc().unix() + 63072000)+')'
+    // search for matching parties from t+2 years backwards
+    'Pf-ResultWish': 'party(name=%'+searched_event+'%,stamp<'+(moment.utc().unix() + 63072000)+')'
   };
 
-  console.log(headers);
+  // console.log(headers);
 
   var event = partyflockInstance.party.search(searched_event, headers).then(function(res) {
-  // var event = partyflockInstance.party.search('unlocked').then(function(res) {
     // Returns array with party Objects
-    // process.stdout.write(Json(arguments[0].party.party.slice(-4)))
-    console.log(arguments[0].party.party.slice(-process.argv[4]))
+    console.log(JSON.stringify(arguments))
+
+    // old slice code
+    // console.log(arguments[0].party.party.slice(-process.argv[4]))
   }).catch(console.log)
-} else if (mode == 'lineupsearch') {
-  // andere dingen
 }
+else if (mode == 'lineupsearch') {
+  var event_id = process.argv[4];
 
-var bla = "blaat"
+  var headers = {
+ 'Pf-ResultWish': 'party(name,area(lineup(artist(name),type)))'
+  };
 
-// process.stdout.write(String(event));
+  // console.log(headers);
+  // console.log(event_id);
 
-return bla
+  var event = partyflockInstance.party.lookup(event_id, headers).then(function(res) {
+    // Returns array with artist Objects
+    console.log(JSON.stringify(arguments))
+  }).catch(console.log)
+
+}
