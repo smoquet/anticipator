@@ -32,6 +32,8 @@ from django.db import models
 
 class Events(models.Model):
     # By default, Django gives each model instantance an ID
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, default='0000000')
     date = models.DateField()
-    line_up = models.CharField(max_length=10000)
+    line_up = models.CharField(max_length=10000, default='0000000')
+    source = models.CharField(max_length=1000, default='0000000')
+    source_id = models.CharField(max_length=1000, default='0000000')

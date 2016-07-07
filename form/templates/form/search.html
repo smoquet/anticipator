@@ -35,7 +35,7 @@
 {% if search_results != '' %}
     <ul>
 {% for event_name in search_result_list %}
-        <li><button type="button">{{ event_name }}</button></li>
+        <li><button type="submit" method="post">{{ event_name }}</button></li>
 {% endfor %}
     </ul>
 {% else %}
