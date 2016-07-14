@@ -23,7 +23,10 @@ def index(request):
     '''
     asks user for event_query search and looks up the results in the DB
     if no result, then look in Partyflock and store results in db, then look again
-    ??? make possible to click on result to get the playlist in your Spotify???
+
+    TODO
+    add search field in POST version of index
+
     '''
 
     if request.method == 'POST':
@@ -48,6 +51,7 @@ def index(request):
             '''
              Partyflock lookup: if there are no results in our db, search partyflock and save result in db
             '''
+
             if len(search_result_list_of_names) == 0:
                 partyflock_result = ['eventname', '2001-02-02', 'artist1;artist2;artist3']
                 eventinstance = Events(name='eventname', date='2001-02-02', line_up='artist1;artist2;artist3' )
@@ -111,7 +115,6 @@ def exit(request):
     '''
     print 'exit request = ', request.POST
 
-
     '''
     create session
     '''
@@ -127,8 +130,9 @@ def exit(request):
         #when user comes back from that he will arrive at our redirect_uri, wich is callspot
         return redirect(spot_token[1])
 
+
     '''
-    if the NameForm has been filled in implement, parse the data and give to exit
+    parse form
     '''
 
     # create a form instance and populate it with data from the request: to be able to parse the input
@@ -141,6 +145,13 @@ def exit(request):
         public = form.cleaned_data['public']
         top_x_tracks = form.cleaned_data['top_x_tracks']
         event_name = form.cleaned_data['event_name']
+
+
+
+        '''
+        partyflock will give us line up here
+        '''
+
 
         '''
         Spotify happens below
