@@ -78,7 +78,6 @@ def index(request):
 
 def result(request):
     '''
-    NOT IMPLEMENTED YET!
     This function gets the event name, source and source_id
     and asks for some variable inputs: top_x_tracks, playlist name, etc
     then gives this to the exit view
@@ -89,13 +88,20 @@ def result(request):
     query_object = request.POST
     # parse it
     event_name = query_object.__getitem__('name')
+    print 'parsed event_name =  ', event_name
 
-    # ask for more input in the form
-    form = NameForm()
+    # ask for more input in the form and give it an initial value to pass on the event name
+    form = NameForm(initial={'event_name': event_name})
     # and pass it all to exit
-    context =   {'event_name': event_name}
-    return render(request, 'form/result.html', {'form': NameForm})
-    # return render(request, 'form/result.html')
+
+    # 1e return poging, faalde
+    # context =   {'event_name': event_name}
+    # return render(request, 'form/result.html', {'form': form})
+
+    #2e return poging lukt
+    template = loader.get_template('form/result.html')
+    context =   {'form': form}
+    return HttpResponse(template.render(context, request))
 
 
 def exit(request):
@@ -103,11 +109,11 @@ def exit(request):
     this gets the post request from the NameForm in result view and processes the results
     this is where the magic happens
     '''
+    print 'exit request = ', request.POST
+
 
     '''
-    MOET DIT HIER?
     create session
-    '''
     '''
     # sid = request.session._get_or_create_session_key()
     sid = '123'
@@ -120,61 +126,54 @@ def exit(request):
         # and therefore user needs to be redirected to spot_token[1], wich is the auth_url
         #when user comes back from that he will arrive at our redirect_uri, wich is callspot
         return redirect(spot_token[1])
-    '''
-
-    '''
-    rest van de view
-    '''
-
 
     '''
     if the NameForm has been filled in implement, parse the data and give to exit
     '''
 
+    # create a form instance and populate it with data from the request: to be able to parse the input
+    form = NameForm(request.POST)
+
+    # check whether it's valid:
+    if form.is_valid():
+        # process the data in form.cleaned_data as required
+        playlist_name = form.cleaned_data['playlist_name']
+        public = form.cleaned_data['public']
+        top_x_tracks = form.cleaned_data['top_x_tracks']
+        event_name = form.cleaned_data['event_name']
+
+        '''
+        Spotify happens below
+            - search for artists
+            - get the top tracks
+            - do the magic you know
+        '''
+
+        artist_ids = spotify.artist_id_list_gen(lineup, spot_token[1])
+        track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token[1])
+        spotify.write_playlist(track_id_list, playlist_name, spot_token[1], username)
 
 
-    '''
-    if request.method == 'POST':
-        form = NameForm(request.POST)
-        # create a form instance and populate it with data from the request: to be able to parse the input
-        print 'exit request = ', request.POST
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            playlist_name = form.cleaned_data['playlist_name']
-            public = form.cleaned_data['public']
+        '''
+        Give context to HTML to print to browser
+        '''
 
-            template = loader.get_template('form/result.html')
+        context = {
+            'lineup': lineup,
+            'playlist_name': playlist_name,
+            'username':username,
+            'sort':sort,
+            'public':public,
+            'top_x_tracks':top_x_tracks,
+            'event_name': event_name
+        }
 
-            # process the data
-            artist_ids = spotify.artist_id_list_gen(lineup, spot_token[1])
-            track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token[1])
-            spotify.write_playlist(track_id_list, playlist_name, spot_token[1], username)
+        return HttpResponse(template.render(context, request))
+        # return HttpResponseRedirect('/')
 
 
-            # SUCCES render the it's all good result.html
-            template = loader.get_template('form/result.html')
-            # these key value pairs are called upon in the html file
-            context = {
-                'lineup': lineup,
-                'playlist_name': playlist_name,
-                'username':username,
-                'sort':sort,
-                'public':public,
-                'top_x_tracks':top_x_tracks,
-                # check to see if the database works by printing it to reult screen part 2
-                'databaseinput':eventinstance,
-                #form output is nog een string
-                'line_up':db_input_test_line_up
-            }
-            return HttpResponse(template.render(context, request))
-            # return HttpResponseRedirect('/')
-    '''
+        return render(request, 'form/exit.html')
 
-    print 'exit request = ' , request.POST
-    return render(request, 'form/exit.html')
 
 def callspot(request):
     print 'callspot entered'
