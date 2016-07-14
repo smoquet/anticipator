@@ -148,10 +148,10 @@ def exit(request):
             - get the top tracks
             - do the magic you know
         '''
-
-        artist_ids = spotify.artist_id_list_gen(lineup, spot_token[1])
-        track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token[1])
-        spotify.write_playlist(track_id_list, playlist_name, spot_token[1], username)
+        # this shite dont work yet
+        # artist_ids = spotify.artist_id_list_gen(lineup, spot_token[1])
+        # track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token[1])
+        # spotify.write_playlist(track_id_list, playlist_name, spot_token[1], username)
 
 
         '''
@@ -162,16 +162,12 @@ def exit(request):
             'lineup': lineup,
             'playlist_name': playlist_name,
             'username':username,
-            'sort':sort,
             'public':public,
             'top_x_tracks':top_x_tracks,
             'event_name': event_name
         }
 
-        return HttpResponse(template.render(context, request))
-        # return HttpResponseRedirect('/')
-
-
+        # return HttpResponse(template.render(context, request))
         return render(request, 'form/exit.html')
 
 
