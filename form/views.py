@@ -9,6 +9,7 @@ from django.shortcuts import redirect
 
 from .forms import NameForm, DatabaseLookupForm
 from vpg import *
+from pf_api import pf_api
 import os
 import random
 import string
@@ -153,6 +154,7 @@ def exit(request):
         partyflock will give us line up here
         '''
 
+        lineupsearch(event_id)
 
         '''
         Spotify happens below
@@ -201,7 +203,7 @@ def callspot(request):
 def vpgtest(request):
     sid = request.session._get_or_create_session_key()
     #hard coded vars for testing:
-    lineup, top_x_tracks, playlist_name, spot_token = main.initialise(sid)
+    lineup, top_x_tracks, playlist_name, spot_token = main.initialise()
     # if spot token[0] is false (see spotify file get_token function) then there is no token in chache
     if type(spot_token) != dict:
         if not spot_token[0]:

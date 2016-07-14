@@ -6,7 +6,8 @@ import time
 def event_run(args):
     ''' Node.js wrapper function. Calls event.js with the provided args. '''
 
-    response = muterun_js('event.js', args)
+    print 'event_run'
+    response = muterun_js('pf_api/event.js', args)
 
     if response.exitcode == 0:
         # print response.stdout
@@ -14,7 +15,10 @@ def event_run(args):
         # all went well, create python object with the returned json
         loaded_json = json.loads(response.stdout)
     else:
-      return 'jammer joh'
+      print args
+      print response.stdout
+      print response.stderr
+      return response.stdout
     return loaded_json
 
 def eventsearch(query, num):
@@ -26,13 +30,18 @@ def eventsearch(query, num):
     args = 'eventsearch' + ' "' + query + '"'
     loaded_json = event_run(args)
 
-    parties = loaded_json['0']['party']['party']
-    # print list(reversed(parties))[0]
-    found_parties = []
-    # events are returned chronologically, here we reverse this
-    for party in list(reversed(parties))[0:num]:
-        found_parties.append(party)
-    return found_parties
+    # print loaded_json.stdout
+
+    try:
+        parties = loaded_json['0']['party']['party']
+        # print list(reversed(parties))[0]
+        found_parties = []
+        # events are returned chronologically, here we reverse this
+        for party in list(reversed(parties))[0:num]:
+            found_parties.append(party)
+        return found_parties
+    except:
+        print loaded_json
 
 def lineupsearch(event_id):
     ''' Searches PF for the lineup for 'event_id' '''
@@ -59,7 +68,7 @@ def lineupsearch(event_id):
         return found_artists
     except KeyError:
         print 'event heeft geen lineup'
-
+        print loaded_json
 
 # lineupsearch('311374')
 # print lineupsearch('317209')

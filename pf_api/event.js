@@ -5,7 +5,7 @@ var moment = require('moment');
 var consumerKey = '4ba03d0a359ec1d0'
 
 // pull consumerSecret from file
-var consumerSecret = fs.readFileSync("./pf.secret", "utf8").trim();
+var consumerSecret = fs.readFileSync("./pf_api/pf.secret", "utf8").trim();
 
 var partyflockInstance = new Partyflock(consumerKey, consumerSecret, 'partyflock.nl', true)
 
