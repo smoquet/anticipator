@@ -16,7 +16,7 @@
 <div class="background" >
 
   <div class="title">
-    Anticipator
+    Anticipator result.html
   </div>
 
 
@@ -28,21 +28,39 @@
       <span>{{ playlist_name }}</span>
   </div>
   <div class="three">
-    on Spotify  </div>
+    on Spotify
+  </div>
+  <div class="db_output">
+    {{name}}
+  </div>
+<div class="one"> llololo
+  {% for artist in line_up %}
+      <li>{{ artist }} oooo</li>
+  {% endfor %}
+</div>
+
+<div class = 'form'>
+  <form action="/exit" method="post">
+      {% csrf_token %}
+      <table>
+       {{form.as_table}}
+     </table>
+     <div id = 'submit'>
+      <input type="image" src='../../static/pictures/play.png' value="Submit" class = 'image_submit'/>
+    </div>
+  </form>
 </div>
 
 
 
+</div>
 
 {% if lineup != '' %}
     <ul>
     {% for artist in lineup %}
-        <li>{{ artist }}</li>
+        <li>{{ artist }} iiii</li>
     {% endfor %}
     </ul>
-
-
-
 
 {% else %}
     <p>No lineup supplied.</p>
@@ -50,6 +68,9 @@
 
 
 </div>
+
+
+
 
 
 </body>
