@@ -23,6 +23,19 @@ import unicodedata
 # from filemanager import *
 # from spotify import *
 
+'''
+TODO
+ALL
+    - pass on id in stead of event name from index to result
+        - change value in html button
+        - change form name to id
+INDEX VIEW
+    - add search field in POST version of index
+
+DB  - check bug of double saving
+'''
+
+
 
 def index(request):
     print 'index entered'
@@ -30,25 +43,20 @@ def index(request):
     asks user for event_query search and looks up the results in the DB
     if no result, then look in Partyflock and store results in db, then look again
 
-    TODO
-    add search field in POST version of index
-
     '''
     def db_event_search(event_query):
         '''
-        takes a query and returns a list of events as names
+        takes a query and returns a list of events as id:name key_value_pairs
         '''
         search_results = Events.objects.filter(name__icontains=event_query)
         search_results_values = search_results.values()
         # initialise result list
-        search_result_list_of_names = []
-        # search_result_list_of_tracks_temp = []
+        search_result_key_value_pairs = []
         # create a list with the names of events as results
         for x in search_results_values:
-            print 'resulter  = ',  x['name']
-            search_result_list_of_names.append(x['name'])
-            # search_result_list_of_tracks_temp.append(x['line_up'])
-        return search_result_list_of_names
+            search_result_key_value_pairs.append([x['id'], x['name']])
+
+        return search_result_key_value_pairs
 
 
     if request.method == 'POST':
@@ -63,14 +71,14 @@ def index(request):
             # search for the query in the db
             print 'query = ' , event_query
 
-            search_result_list_of_names = db_event_search(event_query)
-            print 'search_result_list_of_names = ', search_result_list_of_names
+            search_result_key_value_pairs = db_event_search(event_query)
+            print 'search_result_key_value_pairs = ', search_result_key_value_pairs
 
             '''
              Partyflock lookup: if there are no results in our db, search partyflock and save result in db
             '''
 
-            if len(search_result_list_of_names) == 0:
+            if len(search_result_key_value_pairs) == 0:
                 partyflock_number_of_results = 5
 
                 pf_events = pf_api.eventsearch(event_query, partyflock_number_of_results)
@@ -92,12 +100,17 @@ def index(request):
                 # then return the result from the db again
                 print 'query = ' , event_query
 
-            search_result_list_of_names = db_event_search(event_query)
-            print 'search_result_list_of_names PF if = ', search_result_list_of_names
+            search_result_key_value_pairs = db_event_search(event_query)
+            print 'search_result_key_value_pairs PF if = ', search_result_key_value_pairs
             # assign search.html in template variable
             template = loader.get_template('form/index.html')
             # fill in context
-            context = { 'event_query':event_query, 'search_result_list_of_names':search_result_list_of_names}
+
+
+
+            search_result_key_value_pairs
+            print 'search_result_key_value_pairs', search_result_key_value_pairs
+            context = { 'event_query':event_query, 'search_result_key_value_pairs':search_result_key_value_pairs}
 
             return HttpResponse(template.render(context, request))
 
@@ -110,7 +123,7 @@ def index(request):
 
 def result(request):
     '''
-    This function gets the event name, source and source_id
+    This function gets the event name, should get id
     and asks for some variable inputs: top_x_tracks, playlist name, etc
     then gives this to the exit view
     '''
@@ -119,15 +132,15 @@ def result(request):
     # accept the request
     query_object = request.POST
     # parse it
-    event_name = query_object.__getitem__('name')
-    print 'parsed event_name =  ', event_name
+    event_id = query_object.__getitem__('id')
+    print 'parsed event_id =  ', event_id
 
     # ask for more input in the form and give it an initial value to pass on the event name
-    form = NameForm(initial={'event_name': event_name})
+    form = NameForm(initial={'event_id': event_id})
     # and pass it all to exit
 
     # 1e return poging, faalde
-    # context =   {'event_name': event_name}
+    # context =   {'event_id': event_id}
     # return render(request, 'form/result.html', {'form': form})
 
     #2e return poging lukt
@@ -172,7 +185,7 @@ def exit(request):
         playlist_name = form.cleaned_data['playlist_name']
         public = form.cleaned_data['public']
         top_x_tracks = form.cleaned_data['top_x_tracks']
-        event_name = form.cleaned_data['event_name']
+        event_id = form.cleaned_data['event_id']
 
 
 
@@ -180,7 +193,7 @@ def exit(request):
         partyflock will give us line up here
         '''
 
-        lineupsearch(event_id)
+        # lineupsearch(event_id)
 
         '''
         Spotify happens below
@@ -204,7 +217,7 @@ def exit(request):
             'username':username,
             'public':public,
             'top_x_tracks':top_x_tracks,
-            'event_name': event_name
+            'event_id': event_id
         }
 
         # return HttpResponse(template.render(context, request))

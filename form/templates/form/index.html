@@ -30,13 +30,13 @@
   </div>
 
 <div class = 'results'>
-{% if search_result_list_of_names != '' %}
+{% if event_names != '' %}
     <ul>
-{% for event_name in search_result_list_of_names %}
+{% for key_value_pair in search_result_key_value_pairs %}
         <li>
 					<form class="result_list" action="/result" method="post">
 						{% csrf_token %}
-						<button  type="submit" name="name" value="{{ event_name }}">{{ event_name }}</button>
+						<button  type="submit" name="id" value="{{ key_value_pair.0 }}">{{ key_value_pair.1 }}</button>
 					</form>
 				</li>
 {% endfor %}
