@@ -30,9 +30,9 @@
   </div>
 
 <div class = 'results'>
-{% if search_results != '' %}
+{% if search_result_list_of_names != '' %}
     <ul>
-{% for event_name in search_result_list %}
+{% for event_name in search_result_list_of_names %}
         <li>
 					<form class="result_list" action="/result" method="post">
 						{% csrf_token %}

@@ -45,6 +45,7 @@ def index(request):
         # search_result_list_of_tracks_temp = []
         # create a list with the names of events as results
         for x in search_results_values:
+            print 'resulter  = ',  x['name']
             search_result_list_of_names.append(x['name'])
             # search_result_list_of_tracks_temp.append(x['line_up'])
         return search_result_list_of_names
@@ -62,40 +63,41 @@ def index(request):
             # search for the query in the db
             print 'query = ' , event_query
 
-        search_result_list_of_names = db_event_search(event_query)
+            search_result_list_of_names = db_event_search(event_query)
+            print 'search_result_list_of_names = ', search_result_list_of_names
 
-        '''
-         Partyflock lookup: if there are no results in our db, search partyflock and save result in db
-        '''
+            '''
+             Partyflock lookup: if there are no results in our db, search partyflock and save result in db
+            '''
 
-        if len(search_result_list_of_names) == 0:
-            partyflock_number_of_results = 5
+            if len(search_result_list_of_names) == 0:
+                partyflock_number_of_results = 5
 
-            pf_events = pf_api.eventsearch(event_query, partyflock_number_of_results)
+                pf_events = pf_api.eventsearch(event_query, partyflock_number_of_results)
 
-            # print pf_api.eventsearch('frenchcore', 1)
-            # pf_api.lineupsearch(4653845638475)
-            # print pf_api.testfunct()
-            print 'pf_events = ', pf_events
+                # print pf_api.eventsearch('frenchcore', 1)
+                # pf_api.lineupsearch(4653845638475)
+                # print pf_api.testfunct()
+                print 'pf_events = ', pf_events
 
-            for x in range(min([partyflock_number_of_results, len(pf_events)])):
-                stamp = pf_events[x]['stamp']
-                date = datetime.fromtimestamp(stamp).strftime('%Y/%m/%d').replace('/', '-')
-                source_id = pf_events[x]['id']
-                name = unicodedata.normalize('NFKD', pf_events[x]['name']).encode('ascii','ignore').lower()
-                source = 'partyflock'
-                eventinstance = Events(name=name, date=date, source_id=source_id, source=source )
-                eventinstance.save()
+                for x in range(min([partyflock_number_of_results, len(pf_events)])):
+                    stamp = pf_events[x]['stamp']
+                    date = datetime.fromtimestamp(stamp).strftime('%Y/%m/%d').replace('/', '-')
+                    source_id = pf_events[x]['id']
+                    name = unicodedata.normalize('NFKD', pf_events[x]['name']).encode('ascii','ignore').lower()
+                    source = 'partyflock'
+                    eventinstance = Events(name=name, date=date, source_id=source_id, source=source )
+                    eventinstance.save()
 
-            # then return the result from the db again
-            print 'query = ' , event_query
+                # then return the result from the db again
+                print 'query = ' , event_query
 
             search_result_list_of_names = db_event_search(event_query)
-
+            print 'search_result_list_of_names PF if = ', search_result_list_of_names
             # assign search.html in template variable
             template = loader.get_template('form/index.html')
             # fill in context
-            context = { 'event_query':event_query, 'search_result_list':search_result_list_of_names}
+            context = { 'event_query':event_query, 'search_result_list_of_names':search_result_list_of_names}
 
             return HttpResponse(template.render(context, request))
 
