@@ -36,4 +36,4 @@ class Events(models.Model):
     date = models.DateField()
     line_up = models.CharField(max_length=10000, default='0000000')
     source = models.CharField(max_length=1000, default='0000000')
-    source_id = models.CharField(max_length=1000, default='0000000')
+    source_id = models.IntegerField(default='0000000')

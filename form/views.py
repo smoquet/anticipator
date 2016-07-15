@@ -10,9 +10,13 @@ from django.shortcuts import redirect
 from .forms import NameForm, DatabaseLookupForm
 from vpg import *
 from pf_api import pf_api
+
+from datetime import datetime
+
 import os
 import random
 import string
+import unicodedata
 # import vpg.filemanager
 # import vpg.spotify
 # import vpg.main
@@ -30,6 +34,21 @@ def index(request):
     add search field in POST version of index
 
     '''
+    def db_event_search(event_query):
+        '''
+        takes a query and returns a list of events as names
+        '''
+        search_results = Events.objects.filter(name__icontains=event_query)
+        search_results_values = search_results.values()
+        # initialise result list
+        search_result_list_of_names = []
+        # search_result_list_of_tracks_temp = []
+        # create a list with the names of events as results
+        for x in search_results_values:
+            search_result_list_of_names.append(x['name'])
+            # search_result_list_of_tracks_temp.append(x['line_up'])
+        return search_result_list_of_names
+
 
     if request.method == 'POST':
         print 'search POST entered'
@@ -38,35 +57,40 @@ def index(request):
         if form.is_valid():
             print 'form is valid'
             # assign the form input to the variable event_query
-            event_query = form.cleaned_data['event_query']
+            event_query_unicode = form.cleaned_data['event_query']
+            event_query = unicodedata.normalize('NFKD', event_query_unicode).encode('ascii','ignore')
             # search for the query in the db
-            search_results = Events.objects.filter(name=event_query)
-            search_results_values = search_results.values()
-            # initialise result list
-            search_result_list_of_names = []
-            # search_result_list_of_tracks_temp = []
-            # create a list with the names of events as results
-            for x in search_results_values:
-                search_result_list_of_names.append(x['name'])
-                # search_result_list_of_tracks_temp.append(x['line_up'])
+            print 'query = ' , event_query
 
-            '''
-             Partyflock lookup: if there are no results in our db, search partyflock and save result in db
-            '''
+        search_result_list_of_names = db_event_search(event_query)
 
-            if len(search_result_list_of_names) == 0:
-                partyflock_result = ['eventname', '2001-02-02', 'artist1;artist2;artist3']
-                eventinstance = Events(name='eventname', date='2001-02-02', line_up='artist1;artist2;artist3' )
+        '''
+         Partyflock lookup: if there are no results in our db, search partyflock and save result in db
+        '''
+
+        if len(search_result_list_of_names) == 0:
+            partyflock_number_of_results = 5
+
+            pf_events = pf_api.eventsearch(event_query, partyflock_number_of_results)
+
+            # print pf_api.eventsearch('frenchcore', 1)
+            # pf_api.lineupsearch(4653845638475)
+            # print pf_api.testfunct()
+            print 'pf_events = ', pf_events
+
+            for x in range(min([partyflock_number_of_results, len(pf_events)])):
+                stamp = pf_events[x]['stamp']
+                date = datetime.fromtimestamp(stamp).strftime('%Y/%m/%d').replace('/', '-')
+                source_id = pf_events[x]['id']
+                name = unicodedata.normalize('NFKD', pf_events[x]['name']).encode('ascii','ignore').lower()
+                source = 'partyflock'
+                eventinstance = Events(name=name, date=date, source_id=source_id, source=source )
                 eventinstance.save()
-                # then return the result from the db again
-                search_results = Events.objects.filter(name='eventname')
-                search_results_values = search_results.values()
-                # initialise result list
-                search_result_list_of_names = []
-                # search_result_list_of_tracks_temp = []
-                # create a list with the names of events as results
-                for x in search_results_values:
-                    search_result_list_of_names.append(x['name'])
+
+            # then return the result from the db again
+            print 'query = ' , event_query
+
+            search_result_list_of_names = db_event_search(event_query)
 
             # assign search.html in template variable
             template = loader.get_template('form/index.html')
@@ -173,7 +197,7 @@ def exit(request):
         '''
 
         context = {
-            'lineup': lineup,
+            # 'lineup': lineup,
             'playlist_name': playlist_name,
             'username':username,
             'public':public,
