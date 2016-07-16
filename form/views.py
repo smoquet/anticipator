@@ -195,6 +195,7 @@ def exit(request):
         '''
         partyflock will give us line up here
         '''
+
         # get source (partyflock) and source_id
 
         party = Events.objects.filter(id=unicodetostring(event_id))
@@ -205,6 +206,20 @@ def exit(request):
 
         # get lineup
         # pf_api.lineupsearch(event_id)
+
+        # >>>>>>> WIP lineup search and debugging
+        # event_id = '316839'
+        #
+        # # print pf_api.eventsearch('frenchcore', 5)
+        # print 'call pf_api'
+        #
+        # # deze werkt niet, later uitzoeken waarom
+        # # lineup = pf_api.lineupsearch('316839')
+        #
+        # lineup = pf_api.lineupsearch('317209')
+        # print 'return from pf_api'
+        #
+        # print lineup
 
         '''
         Spotify happens below
@@ -221,6 +236,7 @@ def exit(request):
         '''
         Give context to HTML to print to browser
         '''
+        template = loader.get_template('form/exit.html')
 
         context = {
             # 'lineup': lineup,
@@ -232,7 +248,8 @@ def exit(request):
         }
 
         # return HttpResponse(template.render(context, request))
-        return render(request, 'form/exit.html')
+        # return render(request, 'form/exit.html')
+        return HttpResponse(template.render(context, request))
 
 
 def callspot(request):

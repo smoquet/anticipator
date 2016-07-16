@@ -52,11 +52,13 @@ def lineupsearch(event_id):
     # events without lineup don't have 'area'
     try:
         areas = loaded_json['0']['party']['area']
-        # print loaded_json
+        print loaded_json
         found_artists = []
         for area in areas:
+          print 'hoi23'
+          print area
           lineup = area['lineup']
-
+          print 'area 51'
           # this needs to be on a t-shirt:
           for artist in lineup:
               if artist['type'] == 'mc':
@@ -66,11 +68,15 @@ def lineupsearch(event_id):
               else:
                   found_artists.append(artist['artist']['name'])
         return found_artists
+        # return 'henk'
     except KeyError:
         print 'event heeft geen lineup'
-        print loaded_json
+        # print loaded_json
+    # except:
+    #     print 'henk'
+    #     # print loaded_json
 
-# lineupsearch('311374')
-# print lineupsearch('317209')
+# print lineupsearch('311374')
+# print lineupsearch(317209)
 # lineupsearch('325641') # lijkt leeg
 # print eventsearch('frenchcore', 5)
