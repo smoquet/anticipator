@@ -25,17 +25,20 @@ import unicodedata
 
 '''
 TODO
-ALL
-    - pass on id in stead of event name from index to result
-        - change value in html button
-        - change form name to id
+
 INDEX VIEW
     - add search field in POST version of index
 
 DB  - check bug of double saving
+EXIT VIEW
+    - do lineupsearch (regel 206), but only if there isnt a line up yet
+    - save lineup in db
+
 '''
 
-
+def unicodetostring(unicode):
+    string_out = unicodedata.normalize('NFKD', unicode).encode('ascii','ignore')
+    return string_out
 
 def index(request):
     print 'index entered'
@@ -187,13 +190,21 @@ def exit(request):
         top_x_tracks = form.cleaned_data['top_x_tracks']
         event_id = form.cleaned_data['event_id']
 
-
+        print type(event_id)
 
         '''
         partyflock will give us line up here
         '''
+        # get source (partyflock) and source_id
 
-        # lineupsearch(event_id)
+        party = Events.objects.filter(id=unicodetostring(event_id))
+        party_values = party.values()
+        source = unicodetostring(party_values[0]['source'])
+        source_id = unicodetostring(party_values[0]['source_id'])
+        print 'bron = ' , source, source_id
+
+        # get lineup
+        # pf_api.lineupsearch(event_id)
 
         '''
         Spotify happens below
