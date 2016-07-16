@@ -2,6 +2,11 @@
 from Naked.toolshed.shell import muterun_js
 import json
 import time
+import unicodedata
+
+def unicodetostring(unicode):
+    string_out = unicodedata.normalize('NFKD', unicode).encode('ascii','ignore')
+    return string_out
 
 def event_run(args):
     ''' Node.js wrapper function. Calls event.js with the provided args. '''
@@ -15,10 +20,10 @@ def event_run(args):
         # all went well, create python object with the returned json
         loaded_json = json.loads(response.stdout)
     else:
-      print args
-      print response.stdout
-      print response.stderr
-      return response.stdout
+      print 'args  = ', args
+      print 'response.stdout = ', response.stdout
+      print 'response.stderr = ', response.stderr
+      return 'response.stdout = ', response.stdout
     return loaded_json
 
 def eventsearch(query, num):
@@ -44,37 +49,44 @@ def eventsearch(query, num):
         print loaded_json
 
 def lineupsearch(event_id):
-    ''' Searches PF for the lineup for 'event_id' '''
-
+    '''
+    Searches PF for the lineup for 'event_id'
+    returns list of strings (not unicode!)
+    '''
     args = 'lineupsearch' + ' ' + str(event_id)
     loaded_json = event_run(args)
-
     # events without lineup don't have 'area'
     try:
         areas = loaded_json['0']['party']['area']
-        print loaded_json
+        # print 'loaded_json = ', loaded_json
         found_artists = []
         for area in areas:
-          print 'hoi23'
-          print area
           lineup = area['lineup']
-          print 'area 51'
           # this needs to be on a t-shirt:
           for artist in lineup:
               if artist['type'] == 'mc':
                   # Fuck MCs
                   next
-
               else:
                   found_artists.append(artist['artist']['name'])
-        return found_artists
-        # return 'henk'
     except KeyError:
         print 'event heeft geen lineup'
-        # print loaded_json
-    # except:
-    #     print 'henk'
-    #     # print loaded_json
+    except TypeError:
+        # in this case theres only one area
+        lineup = loaded_json['0']['party']['area']['lineup']
+        print 'area = ', area
+        for artist in lineup:
+              if artist['type'] == 'mc':
+                  # Fuck MCs
+                  next
+              else:
+                  found_artists.append(artist['artist']['name'])        
+    # format resutl from unicode to string
+    found_artists_as_strings = []
+    for x in found_artists:
+        found_artists_as_strings.append(unicodetostring(x))
+    print 'found artists = ', found_artists_as_strings
+    return found_artists_as_strings
 
 # print lineupsearch('311374')
 # print lineupsearch(317209)

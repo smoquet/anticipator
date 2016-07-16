@@ -204,8 +204,15 @@ def exit(request):
         source_id = unicodetostring(party_values[0]['source_id'])
         print 'bron = ' , source, source_id
 
-        # get lineup
-        # pf_api.lineupsearch(event_id)
+        # get lineup;
+        pf_api.lineupsearch(str(source_id))
+
+        # search two areas
+        # pf_api.lineupsearch('311067')
+        # pf_api.lineupsearch('311374')
+        # pf_api.lineupsearch('317209')
+        # print "EVENTSSSSSS = " , pf_api.eventsearch('frenchcore', 5)
+
 
         # >>>>>>> WIP lineup search and debugging
         # event_id = '316839'
