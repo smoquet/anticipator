@@ -80,7 +80,7 @@ def lineupsearch(event_id):
                   # Fuck MCs
                   next
               else:
-                  found_artists.append(artist['artist']['name'])        
+                  found_artists.append(artist['artist']['name'])
     # format resutl from unicode to string
     found_artists_as_strings = []
     for x in found_artists:

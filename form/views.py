@@ -205,8 +205,9 @@ def exit(request):
         print 'bron = ' , source, source_id
 
         # get lineup;
-        pf_api.lineupsearch(str(source_id))
+        lineup = pf_api.lineupsearch(str(source_id))
 
+        spotify.tracklist_gen(lineup, top_x_tracks, spot_token)
         # search two areas
         # pf_api.lineupsearch('311067')
         # pf_api.lineupsearch('311374')
@@ -251,7 +252,8 @@ def exit(request):
             'username':username,
             'public':public,
             'top_x_tracks':top_x_tracks,
-            'event_id': event_id
+            'event_id': event_id,
+            'lineup': lineup
         }
 
         # return HttpResponse(template.render(context, request))
