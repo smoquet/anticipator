@@ -23,18 +23,6 @@ import unicodedata
 # from filemanager import *
 # from spotify import *
 
-'''
-TODO
-
-INDEX VIEW
-    - add search field in POST version of index
-
-DB  - check bug of double saving
-EXIT VIEW
-    - do lineupsearch (regel 206), but only if there isnt a line up yet
-    - save lineup in db
-
-'''
 
 def unicodetostring(unicode):
     string_out = unicodedata.normalize('NFKD', unicode).encode('ascii','ignore')
@@ -163,10 +151,7 @@ def exit(request):
     create session
     '''
     sid = request.session._get_or_create_session_key()
-<<<<<<< HEAD
     print 'session id  = ', sid
-=======
->>>>>>> 60cfb78b2a1ab36e2270460b41dcfc3b2b9cd582
     # sid = '123'
     top_x_tracks, client_id, client_secret, redirect_uri = main.initialise()
     spot_token, username = main.init_spot(redirect_uri, client_id, client_secret, sid)
