@@ -167,13 +167,13 @@ def exit(request):
     top_x_tracks, client_id, client_secret, redirect_uri = main.initialise()
     spot_token, username = main.init_spot(redirect_uri, client_id, client_secret, sid)
 
+    print spot_token
     # if spot token[0] is false (see spotify file get_token function) then there is no token in cache
     if not spot_token[0]:
         print 'no spot token and thus redirect to spot and then back to callspot'
         # and therefore user needs to be redirected to spot_token[1], wich is the auth_url
         #when user comes back from that he will arrive at our redirect_uri, wich is callspot
         return redirect(spot_token[1])
-
 
     '''
     parse form
@@ -207,7 +207,7 @@ def exit(request):
         # get lineup;
         lineup = pf_api.lineupsearch(str(source_id))
 
-        spotify.tracklist_gen(lineup, top_x_tracks, spot_token)
+        spotify.tracklist_gen(lineup, top_x_tracks, spot_token[1])
         # search two areas
         # pf_api.lineupsearch('311067')
         # pf_api.lineupsearch('311374')
@@ -264,8 +264,8 @@ def exit(request):
 def callspot(request):
     print 'callspot entered'
 
-    # sid = request.session._get_or_create_session_key()
-    sid = '123'
+    sid = request.session._get_or_create_session_key()
+    # sid = '123'
     top_x_tracks, client_id, client_secret, redirect_uri = main.initialise()
 
     # the build_absolute_uri method from class HttpRequest retrieves the string given by spotify to user
