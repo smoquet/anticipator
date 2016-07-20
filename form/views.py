@@ -162,8 +162,8 @@ def exit(request):
     '''
     create session
     '''
-    # sid = request.session._get_or_create_session_key()
-    sid = '123'
+    sid = request.session._get_or_create_session_key()
+    # sid = '123'
     top_x_tracks, client_id, client_secret, redirect_uri = main.initialise()
     spot_token, username = main.init_spot(redirect_uri, client_id, client_secret, sid)
 
@@ -207,7 +207,9 @@ def exit(request):
         # get lineup;
         lineup = pf_api.lineupsearch(str(source_id))
 
-        spotify.tracklist_gen(lineup, top_x_tracks, spot_token[1])
+        artist_ids = spotify.artist_id_list_gen(lineup, spot_token[1])
+        track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token[1])
+        spotify.write_playlist(track_id_list, playlist_name, spot_token[1], username)
         # search two areas
         # pf_api.lineupsearch('311067')
         # pf_api.lineupsearch('311374')
@@ -238,7 +240,6 @@ def exit(request):
         # this shite dont work yet
         # artist_ids = spotify.artist_id_list_gen(lineup, spot_token[1])
         # track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token[1])
-        # spotify.write_playlist(track_id_list, playlist_name, spot_token[1], username)
 
 
         '''
