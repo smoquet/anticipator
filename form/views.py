@@ -187,6 +187,13 @@ def exit(request):
 
         # get lineup;
         lineup = pf_api.lineupsearch(str(source_id))
+        print 'exit view lineup = ', lineup
+        local_event_instance = helper.db_return_query_object_by_id(event_id)
+        # local_event_instance.lineup = helper.list_to_string_or_back(lineup)
+        # local_event_instance.save(update_fields='line_up')
+        local_event_instance.update(line_up=helper.list_to_string_or_back(lineup))
+        print 'event linep saved in exit view'
+
 
         artist_ids = spotify.artist_id_list_gen(lineup, spot_token[1])
         track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token[1])

@@ -1,9 +1,17 @@
 from form.models import *
 import unicodedata
+from ast import literal_eval
 
 def unicodetostring(unicode):
     string_out = unicodedata.normalize('NFKD', unicode).encode('ascii','ignore')
     return string_out
+
+def list_to_string_or_back(list_or_string):
+    if type(list_or_string) == list:
+        return repr(list_or_string)
+    if type(list_or_string) == str:
+        return literal_eval(list_or_string)
+
 
 def db_event_search(event_query):
     '''
@@ -35,3 +43,7 @@ def db_search_by_id(event_query):
             dictonary_unicode[key] = unicodetostring(dictonary_unicode[key])
     # print dictonary_unicode
     return dictonary_unicode
+
+
+def db_return_query_object_by_id(event_query):
+    return Events.objects.filter(id=event_query)
