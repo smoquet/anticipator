@@ -162,12 +162,14 @@ def exit(request):
     '''
     create session
     '''
-    # sid = request.session._get_or_create_session_key()
-    sid = '123'
+    sid = request.session._get_or_create_session_key()
+    print 'session id  = ', sid
+    # sid = '123'
     top_x_tracks, client_id, client_secret, redirect_uri = main.initialise()
     spot_token, username = main.init_spot(redirect_uri, client_id, client_secret, sid)
 
-    print spot_token
+    print 'spot_token = ', spot_token
+
     # if spot token[0] is false (see spotify file get_token function) then there is no token in cache
     if not spot_token[0]:
         print 'no spot token and thus redirect to spot and then back to callspot'

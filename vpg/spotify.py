@@ -6,13 +6,16 @@ from main import *
 import time
 
 def get_token(sid, client_id, client_secret, redirect_uri):
+    print 'spotify.get_token entered'
     # called upon in initialise function
     spotify = spotipy.Spotify()
     scope = 'playlist-modify-private'
     # door module oauth2 aaan te roepen creeren we een object van classe SpitifyOAuth, die
     # initieren we met de input die tussen haakjes staat en slaan we op in sp_oauth
+    # in de cache path is de naam van het bestand waarin de spotify token wordt opgeslagen.
     sp_oauth = oauth2.SpotifyOAuth(client_id, client_secret, redirect_uri,
         scope=scope, cache_path=".cache-" + sid )
+    print 'sp_oauth =', sp_oauth
     # check to see if there is a cached token, by calling upon object in sp_oauth
     token_info = sp_oauth.get_cached_token()
     if not token_info:
