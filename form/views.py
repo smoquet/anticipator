@@ -17,6 +17,7 @@ import os
 import random
 import string
 import unicodedata
+import helper
 # import vpg.filemanager
 # import vpg.spotify
 # import vpg.main
@@ -35,19 +36,6 @@ def index(request):
     if no result, then look in Partyflock and store results in db, then look again
 
     '''
-    def db_event_search(event_query):
-        '''
-        takes a query and returns a list of events as id:name key_value_pairs
-        '''
-        search_results = Events.objects.filter(name__icontains=event_query)
-        search_results_values = search_results.values()
-        # initialise result list
-        search_result_key_value_pairs = []
-        # create a list with the names of events as results
-        for x in search_results_values:
-            search_result_key_value_pairs.append([x['id'], x['name']])
-
-        return search_result_key_value_pairs
 
 
     if request.method == 'POST':
@@ -62,7 +50,7 @@ def index(request):
             # search for the query in the db
             print 'query = ' , event_query
 
-            search_result_key_value_pairs = db_event_search(event_query)
+            search_result_key_value_pairs = helper.db_event_search(event_query)
             print 'search_result_key_value_pairs = ', search_result_key_value_pairs
 
             '''
@@ -91,7 +79,7 @@ def index(request):
                 # then return the result from the db again
                 print 'query = ' , event_query
 
-            search_result_key_value_pairs = db_event_search(event_query)
+            search_result_key_value_pairs = helper.db_event_search(event_query)
             print 'search_result_key_value_pairs PF if = ', search_result_key_value_pairs
             # assign search.html in template variable
             template = loader.get_template('form/index.html')
@@ -122,12 +110,15 @@ def result(request):
 
     # accept the request
     query_object = request.POST
+    print 'query_object = ', query_object
     # parse it
     event_id = query_object.__getitem__('id')
+    # get event name form id
+    event_name = helper.db_search_by_id(event_id)['name']
     print 'parsed event_id =  ', event_id
 
     # ask for more input in the form and give it an initial value to pass on the event name
-    form = NameForm(initial={'event_id': event_id})
+    form = NameForm(initial={'event_id': event_id, 'playlist_name':event_name })
     # and pass it all to exit
 
     # 1e return poging, faalde
