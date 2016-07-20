@@ -24,6 +24,18 @@ import helper
 # from filemanager import *
 # from spotify import *
 
+'''
+TODO
+
+INDEX VIEW
+    - add search field in POST version of index
+
+DB  - check bug of double saving
+EXIT VIEW
+    - do lineupsearch (regel 206), but only if there isnt a line up yet
+    - save lineup in db
+
+'''
 
 def unicodetostring(unicode):
     string_out = unicodedata.normalize('NFKD', unicode).encode('ascii','ignore')
@@ -142,8 +154,6 @@ def exit(request):
     create session
     '''
     sid = request.session._get_or_create_session_key()
-    print 'session id  = ', sid
-    # sid = '123'
     top_x_tracks, client_id, client_secret, redirect_uri = main.initialise()
     spot_token, username = main.init_spot(redirect_uri, client_id, client_secret, sid)
 
@@ -178,7 +188,6 @@ def exit(request):
         '''
 
         # get source (partyflock) and source_id
-
         party = Events.objects.filter(id=unicodetostring(event_id))
         party_values = party.values()
         source = unicodetostring(party_values[0]['source'])
@@ -188,40 +197,15 @@ def exit(request):
         # get lineup;
         lineup = pf_api.lineupsearch(str(source_id))
 
+        '''
+        Spotify happens below
+        - search for artists
+        - get the top tracks
+        - do the magic you know
+        '''
         artist_ids = spotify.artist_id_list_gen(lineup, spot_token[1])
         track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token[1])
         spotify.write_playlist(track_id_list, playlist_name, spot_token[1], username)
-        # search two areas
-        # pf_api.lineupsearch('311067')
-        # pf_api.lineupsearch('311374')
-        # pf_api.lineupsearch('317209')
-        # print "EVENTSSSSSS = " , pf_api.eventsearch('frenchcore', 5)
-
-
-        # >>>>>>> WIP lineup search and debugging
-        # event_id = '316839'
-        #
-        # # print pf_api.eventsearch('frenchcore', 5)
-        # print 'call pf_api'
-        #
-        # # deze werkt niet, later uitzoeken waarom
-        # # lineup = pf_api.lineupsearch('316839')
-        #
-        # lineup = pf_api.lineupsearch('317209')
-        # print 'return from pf_api'
-        #
-        # print lineup
-
-        '''
-        Spotify happens below
-            - search for artists
-            - get the top tracks
-            - do the magic you know
-        '''
-        # this shite dont work yet
-        # artist_ids = spotify.artist_id_list_gen(lineup, spot_token[1])
-        # track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token[1])
-
 
         '''
         Give context to HTML to print to browser
@@ -238,8 +222,6 @@ def exit(request):
             'lineup': lineup
         }
 
-        # return HttpResponse(template.render(context, request))
-        # return render(request, 'form/exit.html')
         return HttpResponse(template.render(context, request))
 
 
@@ -247,7 +229,6 @@ def callspot(request):
     print 'callspot entered'
 
     sid = request.session._get_or_create_session_key()
-    # sid = '123'
     top_x_tracks, client_id, client_secret, redirect_uri = main.initialise()
 
     # the build_absolute_uri method from class HttpRequest retrieves the string given by spotify to user
@@ -260,7 +241,7 @@ def callspot(request):
 
 def vpgtest(request):
     sid = request.session._get_or_create_session_key()
-    #hard coded vars for testing:
+    # read settings
     lineup, top_x_tracks, playlist_name, spot_token = main.initialise()
     # if spot token[0] is false (see spotify file get_token function) then there is no token in chache
     if type(spot_token) != dict:
