@@ -139,7 +139,7 @@ def exit(request):
     print 'exit request = ', request.POST
 
     '''
-    create session
+    create or get session
     '''
     sid = request.session._get_or_create_session_key()
     print 'session id  = ', sid
@@ -147,19 +147,11 @@ def exit(request):
     top_x_tracks, client_id, client_secret, redirect_uri = main.initialise()
     spot_token, username = main.init_spot(redirect_uri, client_id, client_secret, sid)
 
-    print 'spot_token = ', spot_token
-
-    # if spot token[0] is false (see spotify file get_token function) then there is no token in cache
-    if not spot_token[0]:
-        print 'no spot token and thus redirect to spot and then back to callspot'
-        # and therefore user needs to be redirected to spot_token[1], wich is the auth_url
-        #when user comes back from that he will arrive at our redirect_uri, wich is callspot
-        return redirect(spot_token[1])
-
+   
     '''
     parse form
     '''
-
+    print 'form data = ', request.session.get('form_data')
     # create a form instance and populate it with data from the request: to be able to parse the input
     form = NameForm(request.POST)
 
@@ -173,12 +165,12 @@ def exit(request):
 
         print type(event_id)
 
-        '''
+	'''
         if line_up is already there
         partyflock will give us line up here
         '''
-
-        # get source (partyflock) and source_id
+	
+	# get source (partyflock) and source_id
 
         party = Events.objects.filter(id=unicodetostring(event_id))
         party_values = party.values()
@@ -196,66 +188,76 @@ def exit(request):
         print 'event linep saved in exit view'
 
 
-        artist_ids = spotify.artist_id_list_gen(lineup, spot_token[1])
-        track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token[1])
-        spotify.write_playlist(track_id_list, playlist_name, spot_token[1], username)
-        # search two areas
-        # pf_api.lineupsearch('311067')
-        # pf_api.lineupsearch('311374')
-        # pf_api.lineupsearch('317209')
-        # print "EVENTSSSSSS = " , pf_api.eventsearch('frenchcore', 5)
+        print 'save submitted data in session'
+        for k, v in form.cleaned_data.iteritems():
+            request.session[k] = v
 
+        # if spot token[0] is false (see spotify file get_token function) then there is no token in cache
+        if not spot_token[0]:
 
-        # >>>>>>> WIP lineup search and debugging
-        # event_id = '316839'
-        #
-        # # print pf_api.eventsearch('frenchcore', 5)
-        # print 'call pf_api'
-        #
-        # # deze werkt niet, later uitzoeken waarom
-        # # lineup = pf_api.lineupsearch('316839')
-        #
-        # lineup = pf_api.lineupsearch('317209')
-        # print 'return from pf_api'
-        #
-        # print lineup
+            # submitted_data = ['playlist_name','public','top_x_tracks','event_id']
+            # map(save_in_session, submitted_data)
 
-        '''
-        Spotify happens below
-            - search for artists
-            - get the top tracks
-            - do the magic you know
-        '''
-        # this shite dont work yet
-        # artist_ids = spotify.artist_id_list_gen(lineup, spot_token[1])
-        # track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token[1])
+            print 'no spot token and thus redirect to spot and then back to callspot'
+            # and therefore user needs to be redirected to spot_token[1], wich is the auth_url
+            #when user comes back from that he will arrive at our redirect_uri, wich is callspot
+            return redirect(spot_token[1])
 
+    else:
+        try:
+            # attempt to load saved data from session
+            playlist_name = request.session['playlist_name']
+            public = request.session['public']
+            top_x_tracks = request.session['top_x_tracks']
+            event_id = request.session['event_id']
+        except KeyError:
+            print 'geen posted form en geen session :/'
+            return redirect(index)
 
-        '''
-        Give context to HTML to print to browser
-        '''
-        template = loader.get_template('form/exit.html')
+    '''
+    partyflock will give us line up here
+    '''
 
-        context = {
-            # 'lineup': lineup,
-            'playlist_name': playlist_name,
-            'username':username,
-            'public':public,
-            'top_x_tracks':top_x_tracks,
-            'event_id': event_id,
-            'lineup': lineup
-        }
+    # get source (partyflock) and source_id
+    party = Events.objects.filter(id=unicodetostring(event_id))
+    party_values = party.values()
+    source = unicodetostring(party_values[0]['source'])
+    source_id = unicodetostring(party_values[0]['source_id'])
+    print 'bron = ' , source, source_id
 
-        # return HttpResponse(template.render(context, request))
-        # return render(request, 'form/exit.html')
-        return HttpResponse(template.render(context, request))
+       
+    '''
+    Spotify happens below
+    - search for artists
+    - get the top tracks
+    - do the magic you know
+    '''
+    artist_ids = spotify.artist_id_list_gen(lineup, spot_token[1])
+    track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token[1])
+    spotify.write_playlist(track_id_list, playlist_name, spot_token[1], username)
+
+    '''
+    Give context to HTML to print to browser
+    '''
+    template = loader.get_template('form/exit.html')
+
+    context = {
+        # 'lineup': lineup,
+        'playlist_name': playlist_name,
+        'username':username,
+        'public':public,
+        'top_x_tracks':top_x_tracks,
+        'event_id': event_id,
+        'lineup': lineup
+    }
+
+    return HttpResponse(template.render(context, request))
 
 
 def callspot(request):
     print 'callspot entered'
 
     sid = request.session._get_or_create_session_key()
-    # sid = '123'
     top_x_tracks, client_id, client_secret, redirect_uri = main.initialise()
 
     # the build_absolute_uri method from class HttpRequest retrieves the string given by spotify to user
@@ -264,11 +266,11 @@ def callspot(request):
     # gets user with a token and caches it in the server
     spot_token = spotify.make_token(spot_response, sid, client_id, client_secret, redirect_uri)
 
-    return redirect(index)
+    return redirect(exit)
 
 def vpgtest(request):
     sid = request.session._get_or_create_session_key()
-    #hard coded vars for testing:
+    # read settings
     lineup, top_x_tracks, playlist_name, spot_token = main.initialise()
     # if spot token[0] is false (see spotify file get_token function) then there is no token in chache
     if type(spot_token) != dict:
