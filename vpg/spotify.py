@@ -6,6 +6,11 @@ from main import *
 import time
 
 def get_token(sid, client_id, client_secret, redirect_uri):
+    '''
+    gets a token for user, and caches it for re-use.
+    returns a (bool,token/url) tuple
+        either (True, token) or (False, uri)
+    '''
     print 'spotify.get_token entered'
     # called upon in initialise function
     spotify = spotipy.Spotify()

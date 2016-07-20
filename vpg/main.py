@@ -14,7 +14,9 @@ def initialise():
     return top_x_tracks, client_id, client_secret, redirect_uri
 
 def init_spot(redirect_uri, client_id, client_secret, sid):
-    '''gets spotify token and username'''
+    '''gets spotify token and username
+    spot_token is either the spot_token or redirect_uri
+    '''
     # on Heroku the SPOTIPY_REDIRECT_URI env var is set to the production url
     # the following code ensures that is used
     if os.environ.get('SPOTIPY_REDIRECT_URI'):
