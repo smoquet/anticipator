@@ -174,6 +174,7 @@ def exit(request):
         print type(event_id)
 
         '''
+        if line_up is already there
         partyflock will give us line up here
         '''
 
@@ -188,9 +189,9 @@ def exit(request):
         # get lineup;
         lineup = pf_api.lineupsearch(str(source_id))
         print 'exit view lineup = ', lineup
+
+        # save line_up to corresponding event
         local_event_instance = helper.db_return_query_object_by_id(event_id)
-        # local_event_instance.lineup = helper.list_to_string_or_back(lineup)
-        # local_event_instance.save(update_fields='line_up')
         local_event_instance.update(line_up=helper.list_to_string_or_back(lineup))
         print 'event linep saved in exit view'
 
