@@ -85,9 +85,8 @@ WSGI_APPLICATION = 'anticipator.wsgi.application'
 # on Heroku the DATABASE_URL env var is set to the production db
 # the following code ensures that is used
 if os.environ.get('DATABASE_URL'):
-    db_from_env = dj_database_url.config(conn_max_age=500)
     DATABASES = {}
-    DATABASES['default'].update(db_from_env)
+    DATABASES['default'] = dj_database_url.config(conn_max_age=500)
 else:
     DATABASES = {
         'default': {
