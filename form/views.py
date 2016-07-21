@@ -147,7 +147,7 @@ def exit(request):
     top_x_tracks, client_id, client_secret, redirect_uri = main.initialise()
     spot_token, username = main.init_spot(redirect_uri, client_id, client_secret, sid)
 
-   
+
     '''
     parse form
     '''
@@ -169,24 +169,6 @@ def exit(request):
         if line_up is already there
         partyflock will give us line up here
         '''
-	
-	# get source (partyflock) and source_id
-
-        party = Events.objects.filter(id=unicodetostring(event_id))
-        party_values = party.values()
-        source = unicodetostring(party_values[0]['source'])
-        source_id = unicodetostring(party_values[0]['source_id'])
-        print 'bron = ' , source, source_id
-
-        # get lineup;
-        lineup = pf_api.lineupsearch(str(source_id))
-        print 'exit view lineup = ', lineup
-
-        # save line_up to corresponding event
-        local_event_instance = helper.db_return_query_object_by_id(event_id)
-        local_event_instance.update(line_up=helper.list_to_string_or_back(lineup))
-        print 'event linep saved in exit view'
-
 
         print 'save submitted data in session'
         for k, v in form.cleaned_data.iteritems():
@@ -217,6 +199,20 @@ def exit(request):
     '''
     partyflock will give us line up here
     '''
+    party = Events.objects.filter(id=unicodetostring(event_id))
+    party_values = party.values()
+    source = unicodetostring(party_values[0]['source'])
+    source_id = unicodetostring(party_values[0]['source_id'])
+    print 'bron = ' , source, source_id
+
+    # get lineup;
+    lineup = pf_api.lineupsearch(str(source_id))
+    print 'exit view lineup = ', lineup
+    
+    # save line_up to corresponding event
+    local_event_instance = helper.db_return_query_object_by_id(event_id)
+    local_event_instance.update(line_up=helper.list_to_string_or_back(lineup))
+    print 'event linep saved in exit view'
 
     # get source (partyflock) and source_id
     party = Events.objects.filter(id=unicodetostring(event_id))
@@ -225,7 +221,6 @@ def exit(request):
     source_id = unicodetostring(party_values[0]['source_id'])
     print 'bron = ' , source, source_id
 
-       
     '''
     Spotify happens below
     - search for artists
