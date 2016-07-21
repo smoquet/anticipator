@@ -1,4 +1,5 @@
-"engines": {
-  "node": "0.10.21",
-  "npm": "1.1.x"
+{
+  "engines": {
+    "node": "4.x"
+  }
 }
