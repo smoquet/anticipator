@@ -4,8 +4,15 @@ var moment = require('moment');
 
 var consumerKey = '4ba03d0a359ec1d0'
 
-// pull consumerSecret from file
-var consumerSecret = fs.readFileSync("./pf_api/pf.secret", "utf8").trim();
+// pull consumerSecret from env var or file
+if (process.env.PF_SECRET) {
+  // console.log('env var found')
+  var consumerSecret = process.env.PF_SECRET
+  // console.log(consumerSecret)
+}
+else {
+  var consumerSecret = fs.readFileSync("./pf_api/pf.secret", "utf8").trim();
+}
 
 var partyflockInstance = new Partyflock(consumerKey, consumerSecret, 'partyflock.nl', true)
 
