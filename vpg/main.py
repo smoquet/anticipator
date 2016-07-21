@@ -11,6 +11,11 @@ def initialise():
     settings_file = 'vpg/voorpretgen.ini'
     top_x_set, client_id, client_secret, redirect_uri = filemanager.read_settings(settings_file)
     top_x_tracks = int(top_x_set)
+
+    # on Heroku the SPOTIPY_REDIRECT_URI env var is set to the production url
+    # the following code ensures that is used
+    if os.environ.get('SPOTIPY_REDIRECT_URI'):
+        redirect_uri = os.environ.get('SPOTIPY_REDIRECT_URI')
     return top_x_tracks, client_id, client_secret, redirect_uri
 
 def init_spot(redirect_uri, client_id, client_secret, sid):
