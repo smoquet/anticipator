@@ -131,7 +131,7 @@ def result(request):
     return HttpResponse(template.render(context, request))
 
 
-def exit(request):
+def victory(request):
     '''
     this gets the post request from the NameForm in result view and processes the results
     this is where the magic happens
@@ -208,7 +208,7 @@ def exit(request):
     # get lineup;
     lineup = pf_api.lineupsearch(str(source_id))
     print 'exit view lineup = ', lineup
-    
+
     # save line_up to corresponding event
     local_event_instance = helper.db_return_query_object_by_id(event_id)
     local_event_instance.update(line_up=helper.list_to_string_or_back(lineup))
@@ -234,7 +234,7 @@ def exit(request):
     '''
     Give context to HTML to print to browser
     '''
-    template = loader.get_template('form/exit.html')
+    template = loader.get_template('form/victory.html')
 
     context = {
         # 'lineup': lineup,
