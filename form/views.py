@@ -147,7 +147,7 @@ def victory(request):
     top_x_tracks, client_id, client_secret, redirect_uri = main.initialise()
     spot_token, username = main.init_spot(redirect_uri, client_id, client_secret, sid)
 
-   
+
     '''
     parse form
     '''
@@ -169,7 +169,7 @@ def victory(request):
         if line_up is already there
         partyflock will give us line up here
         '''
-	
+
 	# get source (partyflock) and source_id
 
         party = Events.objects.filter(id=unicodetostring(event_id))
@@ -239,7 +239,7 @@ def victory(request):
     source_id = unicodetostring(party_values[0]['source_id'])
     print 'bron = ' , source, source_id
 
-       
+
     '''
     Spotify happens below
     - search for artists
@@ -247,13 +247,19 @@ def victory(request):
     - do the magic you know
     '''
     artist_ids = spotify.artist_id_list_gen(lineup, spot_token[1])
-    track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token[1])
-    spotify.write_playlist(track_id_list, playlist_name, spot_token[1], username)
+    # handles the exception that there are no results
+
+    if artist_ids != []:
+        print 'writing THAT SHIT NIGGD'
+        track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token[1])
+        spotify.write_playlist(track_id_list, playlist_name, spot_token[1], username)
 
     '''
     Give context to HTML to print to browser
     '''
+
     template = loader.get_template('form/victory.html')
+
 
     context = {
         # 'lineup': lineup,
@@ -262,8 +268,12 @@ def victory(request):
         'public':public,
         'top_x_tracks':top_x_tracks,
         'event_id': event_id,
-        'lineup': lineup
+        'lineup': lineup,
+        'victory_or_defeat': 'victory'
     }
+
+    if artist_ids == []:
+        context['victory_or_defeat'] = 'defeat'
 
     return HttpResponse(template.render(context, request))
 

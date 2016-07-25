@@ -95,7 +95,6 @@ def artist_id_list_gen(artist_list, spot_token):
             return name
         # return the first result of mismatches (this return ony happens when all result are mismatches)
         print 'returned temp_list[0] = ', temp_list[0]
-
         return temp_list[0]
 
     # append ID id_list or name in search_failure list
