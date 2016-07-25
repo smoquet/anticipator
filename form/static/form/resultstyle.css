@@ -81,6 +81,10 @@ font-family: 'Candal';
   display: inline-block;
 }
 
+.paragraph{
+color: white;
+}
+
   .listen{
   color: white;
   }
