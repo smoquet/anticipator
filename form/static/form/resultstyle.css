@@ -35,6 +35,7 @@ li{
 
 .form{
   display: inline-block;
+  color: white;
 }
 .results{
   display: inline-block;
@@ -82,7 +83,10 @@ font-family: 'Candal';
 }
 
 .paragraph{
+  display: inline-block;
+  width: 300px;
 color: white;
+text-align: center;
 }
 
   .listen{

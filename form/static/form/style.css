@@ -24,6 +24,7 @@
   background-size: cover;
   /*background-image: url("../pictures/festival2.jpg");*/
   height: 900px;
+  text-align: center;
 }
 
 
@@ -64,11 +65,14 @@ label{
 }
 
 .form{
+  display: inline-block;
+
   color: white;
   /*border-style: solid;
   border-color: green;*/
   text-align: center;
   padding: 3%;
+
 }
 
 table{
@@ -81,6 +85,7 @@ table{
 
 
 #submit{
+  display: inline-block;
   /*border-style: solid;
   border-color: black;*/
   margin: 2%;
@@ -88,6 +93,7 @@ table{
 
 
 .intfield{
+  display: inline-block;
   background-color: transparent;
   border-style: solid;
   border-color: white;
@@ -100,11 +106,13 @@ table{
 }
 
 .checkbox input{
+  display: inline-block;
   display: none;
   background-color: black
 }
 
 .charfield{
+  display: inline-block;
   background-color: transparent;
   border-style: solid;
   border-color: white;
@@ -121,6 +129,7 @@ table{
 }
 
 .paragraph{
+  display: inline-block;
   color: black;
   text-align: center;
 }
