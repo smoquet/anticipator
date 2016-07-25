@@ -48,6 +48,9 @@ def make_token(spot_response, username, client_id, client_secret, redirect_uri):
     return token_info['access_token']
 
 def artist_id_list_gen(artist_list, spot_token):
+
+    if artist_list != type(list):
+        raise ValueError('artist_list is not a list , but a ', type(artist_list))
     '''
      expects artists as strings in a list
      returns list of id's as unicode strings
