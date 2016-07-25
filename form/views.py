@@ -82,7 +82,7 @@ def index(request):
             search_result_key_value_pairs = helper.db_event_search(event_query)
             print 'search_result_key_value_pairs PF if = ', search_result_key_value_pairs
             # assign search.html in template variable
-            template = loader.get_template('form/index.html')
+            template = loader.get_template('form/results.html')
             # fill in context
 
 
@@ -91,8 +91,13 @@ def index(request):
             print 'search_result_key_value_pairs', search_result_key_value_pairs
             context = { 'event_query':event_query, 'search_result_key_value_pairs':search_result_key_value_pairs}
 
-            return HttpResponse(template.render(context, request))
+            form = DatabaseLookupForm()
+            # return HttpResponse(template.render(context, request, {'form': form}))
+            # return render(context, request, 'form/index.html', {'form': form})
 
+            # template = loader.get_template('form/result.html')
+            context =   {'form': form, 'event_query':event_query, 'search_result_key_value_pairs':search_result_key_value_pairs}
+            return HttpResponse(template.render(context, request))
 
     # if the form is not filled in is thus GET
     form = DatabaseLookupForm()
