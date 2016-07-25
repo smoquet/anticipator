@@ -92,10 +92,7 @@ def index(request):
             context = { 'event_query':event_query, 'search_result_key_value_pairs':search_result_key_value_pairs}
 
             form = DatabaseLookupForm()
-            # return HttpResponse(template.render(context, request, {'form': form}))
-            # return render(context, request, 'form/index.html', {'form': form})
 
-            # template = loader.get_template('form/result.html')
             context =   {'form': form, 'event_query':event_query, 'search_result_key_value_pairs':search_result_key_value_pairs}
             return HttpResponse(template.render(context, request))
 
@@ -236,14 +233,6 @@ def victory(request):
     print 'bron = ' , source, source_id
 
     lineup = unicodetostring(party_values[0]['line_up'])
-
-    # get source (partyflock) and source_id
-    party = Events.objects.filter(id=unicodetostring(event_id))
-    party_values = party.values()
-    source = unicodetostring(party_values[0]['source'])
-    source_id = unicodetostring(party_values[0]['source_id'])
-    print 'bron = ' , source, source_id
-
 
     '''
     Spotify happens below
