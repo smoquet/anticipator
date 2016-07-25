@@ -69,7 +69,6 @@ label{
   border-color: green;*/
   text-align: center;
   padding: 3%;
-
 }
 
 table{
@@ -119,4 +118,9 @@ table{
 
 .image_submit{
   width: 65px;
+}
+
+.paragraph{
+  color: black;
+  text-align: center;
 }
