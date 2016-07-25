@@ -110,14 +110,31 @@ def result(request):
     This function gets the event name, should get id
     and asks for some variable inputs: top_x_tracks, playlist name, etc
     then gives this to the exit view
+    also saves the line_up of the selected event in db
     '''
     print 'result request = ' , request.POST
+
 
     # accept the request
     query_object = request.POST
     print 'query_object = ', query_object
     # parse it
     event_id = query_object.__getitem__('id')
+
+    ''' Saves the lineup of chosen event in db '''
+    # saves the corresponding line_up in db
+    party = Events.objects.filter(id=unicodetostring(event_id))
+    party_values = party.values()
+    source_id = unicodetostring(party_values[0]['source_id'])
+    # get lineup;
+    lineup = pf_api.lineupsearch(str(source_id))
+    print 'result view lineup = ', lineup
+    # save line_up to corresponding event
+    local_event_instance = helper.db_return_query_object_by_id(event_id)
+    local_event_instance.update(line_up=helper.list_to_string_or_back(lineup))
+    print 'event lineup saved in exit view'
+
+
     # get event name form id
     event_name = helper.db_search_by_id(event_id)['name']
     print 'parsed event_id =  ', event_id
@@ -170,7 +187,7 @@ def victory(request):
 
         print type(event_id)
 
-	'''
+        '''
         if line_up is already there
         partyflock will give us line up here
         '''
@@ -183,14 +200,17 @@ def victory(request):
         source_id = unicodetostring(party_values[0]['source_id'])
         print 'bron = ' , source, source_id
 
+        '''
+        do lineup search
+        '''
         # get lineup;
-        lineup = pf_api.lineupsearch(str(source_id))
+        # lineup = pf_api.lineupsearch(str(source_id))
         print 'exit view lineup = ', lineup
 
         # save line_up to corresponding event
         local_event_instance = helper.db_return_query_object_by_id(event_id)
         local_event_instance.update(line_up=helper.list_to_string_or_back(lineup))
-        print 'event linep saved in exit view'
+        print 'event lineup saved in exit view'
 
 
         print 'save submitted data in session'
@@ -219,23 +239,16 @@ def victory(request):
             print 'geen posted form en geen session :/'
             return redirect(index)
 
-    '''
-    partyflock will give us line up here
-    '''
+
     party = Events.objects.filter(id=unicodetostring(event_id))
     party_values = party.values()
     source = unicodetostring(party_values[0]['source'])
     source_id = unicodetostring(party_values[0]['source_id'])
     print 'bron = ' , source, source_id
 
-    # get lineup;
-    lineup = pf_api.lineupsearch(str(source_id))
-    print 'exit view lineup = ', lineup
-
-    # save line_up to corresponding event
-    local_event_instance = helper.db_return_query_object_by_id(event_id)
-    local_event_instance.update(line_up=helper.list_to_string_or_back(lineup))
-    print 'event linep saved in exit view'
+    '''
+    INIT LINEUP HERE><
+    '''
 
     # get source (partyflock) and source_id
     party = Events.objects.filter(id=unicodetostring(event_id))
@@ -252,10 +265,9 @@ def victory(request):
     - do the magic you know
     '''
     artist_ids = spotify.artist_id_list_gen(lineup, spot_token[1])
-    # handles the exception that there are no results
 
+    # handles the exception when there isnt a single result from artist searches in spotify
     if artist_ids != []:
-        print 'writing THAT SHIT NIGGD'
         track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token[1])
         spotify.write_playlist(track_id_list, playlist_name, spot_token[1], username)
 
