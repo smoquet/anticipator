@@ -284,7 +284,7 @@ def callspot(request):
     # gets user with a token and caches it in the server
     spot_token = spotify.make_token(spot_response, sid, client_id, client_secret, redirect_uri)
 
-    return redirect(exit)
+    return redirect(victory)
 
 def vpgtest(request):
     sid = request.session._get_or_create_session_key()
