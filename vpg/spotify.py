@@ -88,13 +88,13 @@ def artist_id_list_gen(artist_list, spot_token):
                     # if no return has been hit, append all mismatches in temp_list
                     temp_list.append(results[u'artists'][u'items'][x][u'id'])
         except IndexError:
-            print 'IndexError hit'
+            # print 'IndexError hit'
             # if no results at all (index error) return name
             print "exit get_artist_id", time.clock()
-            print 'returned name =', name
+            # print 'returned name =', name
             return name
         # return the first result of mismatches (this return ony happens when all result are mismatches)
-        print 'returned temp_list[0] = ', temp_list[0]
+        # print 'returned temp_list[0] = ', temp_list[0]
         return temp_list[0]
 
     # append ID id_list or name in search_failure list
@@ -120,14 +120,14 @@ def tracklist_gen(artist_id_list, n, spot_token):
     country_code = 'NL'
     spotify = spotipy.Spotify(auth=spot_token)
     top_tracks = []
-    print "tracklist_gen artist_id_list = ", artist_id_list
+    # print "tracklist_gen artist_id_list = ", artist_id_list
     # for each artist id, get the top track search results
     for artist_id in artist_id_list:
         top_tracks.append(spotify.artist_top_tracks(artist_id, country=country_code))
 
     # for each top track search result, get all the track id's within and append them
     top_track_ids = []
-    print 'top_tracks = ', top_tracks
+    # print 'top_tracks = ', top_tracks
 
     for x in top_tracks:
         count = 0
@@ -140,7 +140,7 @@ def tracklist_gen(artist_id_list, n, spot_token):
     # print top_track_ids
     # print 'len =' , len(top_track_ids)
     print "exit tracklist_gen", time.clock()
-    print 'top_track_ids = ', top_track_ids
+    # print 'top_track_ids = ', top_track_ids
     return top_track_ids
     # return 0
 
