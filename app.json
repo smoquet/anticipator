@@ -1,7 +1,7 @@
 {
   "name": "Anticipator on Heroku!",
   "description": "An awesome Python app",
-  "image": "heroku/python",
+  "image": "bynd/python-node",
   "keywords": ["python", "django" ],
   "addons": [ "heroku-postgresql" ]
 }

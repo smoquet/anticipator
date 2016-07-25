@@ -131,7 +131,7 @@ def result(request):
     return HttpResponse(template.render(context, request))
 
 
-def exit(request):
+def victory(request):
     '''
     this gets the post request from the NameForm in result view and processes the results
     this is where the magic happens
@@ -147,7 +147,7 @@ def exit(request):
     top_x_tracks, client_id, client_secret, redirect_uri = main.initialise()
     spot_token, username = main.init_spot(redirect_uri, client_id, client_secret, sid)
 
-
+   
     '''
     parse form
     '''
@@ -165,11 +165,11 @@ def exit(request):
 
         print type(event_id)
 
-        '''
+	'''
         if line_up is already there
         partyflock will give us line up here
         '''
-
+	
 	# get source (partyflock) and source_id
 
         party = Events.objects.filter(id=unicodetostring(event_id))
@@ -217,6 +217,20 @@ def exit(request):
     '''
     partyflock will give us line up here
     '''
+    party = Events.objects.filter(id=unicodetostring(event_id))
+    party_values = party.values()
+    source = unicodetostring(party_values[0]['source'])
+    source_id = unicodetostring(party_values[0]['source_id'])
+    print 'bron = ' , source, source_id
+
+    # get lineup;
+    lineup = pf_api.lineupsearch(str(source_id))
+    print 'exit view lineup = ', lineup
+
+    # save line_up to corresponding event
+    local_event_instance = helper.db_return_query_object_by_id(event_id)
+    local_event_instance.update(line_up=helper.list_to_string_or_back(lineup))
+    print 'event linep saved in exit view'
 
     # get source (partyflock) and source_id
     party = Events.objects.filter(id=unicodetostring(event_id))
@@ -225,25 +239,21 @@ def exit(request):
     source_id = unicodetostring(party_values[0]['source_id'])
     print 'bron = ' , source, source_id
 
-
+       
     '''
     Spotify happens below
     - search for artists
     - get the top tracks
     - do the magic you know
     '''
-
-    print 'views.py lineup = ', lineup
     artist_ids = spotify.artist_id_list_gen(lineup, spot_token[1])
-    print 'views.py artist_ids =', artist_ids
     track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token[1])
-    print 'views.py track_id_list = ', track_id_list
     spotify.write_playlist(track_id_list, playlist_name, spot_token[1], username)
 
     '''
     Give context to HTML to print to browser
     '''
-    template = loader.get_template('form/exit.html')
+    template = loader.get_template('form/victory.html')
 
     context = {
         # 'lineup': lineup,
