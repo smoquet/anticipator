@@ -17,17 +17,6 @@
     Anticipator Event playlist generator
   </div>
 
-  <div class='paragraph'>
-    Welcome! </br>
-    </br>
-    Looking forward to an amazing festival or party? Want to get to know all the
-    awesome artists that will be performing? Or just want to get those anticipation
-    juices flowing? We've got you covered! </br>
-    </br>
-    Just enter the festival/event name and we'll take it from there! </br>
-    </br>
-  </div>
-
   <div class = 'form'>
     <form action="/" method="post">
       {% csrf_token %}
@@ -39,6 +28,23 @@
       </div>
     </form>
   </div>
+
+<div class = 'results'>
+{% if event_names != '' %}
+    <ul>
+{% for key_value_pair in search_result_key_value_pairs %}
+        <li>
+					<form class="result_list" action="/result" method="post">
+						{% csrf_token %}
+						<button  type="submit" name="id" value="{{ key_value_pair.0 }}">{{ key_value_pair.1 }}</button>
+					</form>
+				</li>
+{% endfor %}
+    </ul>
+{% else %}
+    <p>No result.</p>
+{% endif %}
+</div>
 
 </div>
 </div>
