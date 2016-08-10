@@ -11,3 +11,4 @@ env
 .idea
 pf.secret
 node_modules
+form/static/form/main.css

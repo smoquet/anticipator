@@ -3,6 +3,8 @@
     "node": "4.x"
   },
   "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-sass": "^2.3.2",
     "moment": "^2.14.1",
     "partyflock": "^0.1.0"
   }
