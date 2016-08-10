@@ -10,3 +10,4 @@ staticfiles
 env
 .idea
 pf.secret
+node_modules

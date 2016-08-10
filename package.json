@@ -1,5 +1,9 @@
 {
   "engines": {
     "node": "4.x"
+  },
+  "dependencies": {
+    "moment": "^2.14.1",
+    "partyflock": "^0.1.0"
   }
 }
