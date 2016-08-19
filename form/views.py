@@ -10,7 +10,6 @@ from django.shortcuts import redirect
 from .forms import NameForm, DatabaseLookupForm
 from vpg import *
 from pf_api import pf_api
-
 from datetime import datetime
 
 import os
@@ -30,77 +29,41 @@ def unicodetostring(unicode):
     return string_out
 
 def index(request):
+
     print 'index entered'
     '''
     asks user for event_query search and looks up the results in the DB
     if no result, then look in Partyflock and store results in db, then look again
-
     '''
-
 
     if request.method == 'POST':
         print 'search POST entered'
         # create the searchform instance and populate it with data from the request:
         form = DatabaseLookupForm(request.POST)
         if form.is_valid():
-            print 'form is valid'
             # assign the form input to the variable event_query
             event_query_unicode = form.cleaned_data['event_query']
             event_query = unicodedata.normalize('NFKD', event_query_unicode).encode('ascii','ignore')
             # search for the query in the db
             print 'query = ' , event_query
-
             search_result_key_value_pairs = helper.db_event_search(event_query)
-            print 'search_result_key_value_pairs = ', search_result_key_value_pairs
-
             '''
-             Partyflock lookup: if there are no results in our db, search partyflock and save result in db
+             Partyflock lookup: if there are less than 5 results in db, search partyflock n (max4) times and save result in db
             '''
 
-            if len(search_result_key_value_pairs) == 0:
-                partyflock_number_of_results = 5
-
-                pf_events = pf_api.eventsearch(event_query, partyflock_number_of_results)
-
-                # print pf_api.eventsearch('frenchcore', 1)
-                # pf_api.lineupsearch(4653845638475)
-                # print pf_api.testfunct()
-                print 'pf_events = ', pf_events
-
-                for x in range(min([partyflock_number_of_results, len(pf_events)])):
-                    stamp = pf_events[x]['stamp']
-                    date = datetime.fromtimestamp(stamp).strftime('%Y/%m/%d').replace('/', '-')
-                    source_id = pf_events[x]['id']
-                    name = unicodedata.normalize('NFKD', pf_events[x]['name']).encode('ascii','ignore').lower()
-                    source = 'partyflock'
-                    eventinstance = Events(name=name, date=date, source_id=source_id, source=source )
-                    eventinstance.save()
+            if len(search_result_key_value_pairs) < 5:
+                partyflock_number_of_results = 5-len(search_result_key_value_pairs)
+                helper.partyflock_search_and_save(event_query, partyflock_number_of_results)
 
                 # then return the result from the db again
-                print 'query = ' , event_query
-
             search_result_key_value_pairs = helper.db_event_search(event_query)
-            print 'search_result_key_value_pairs PF if = ', search_result_key_value_pairs
-            # assign search.html in template variable
             template = loader.get_template('form/results.html')
-            # fill in context
-
-
-
-            search_result_key_value_pairs
-            print 'search_result_key_value_pairs', search_result_key_value_pairs
-            context = { 'event_query':event_query, 'search_result_key_value_pairs':search_result_key_value_pairs}
-
             form = DatabaseLookupForm()
-
             context =   {'form': form, 'event_query':event_query, 'search_result_key_value_pairs':search_result_key_value_pairs}
             return HttpResponse(template.render(context, request))
-
     # if the form is not filled in is thus GET
     form = DatabaseLookupForm()
     return render(request, 'form/index.html', {'form': form})
-
-
 
 def result(request):
     '''
@@ -110,8 +73,6 @@ def result(request):
     also saves the line_up of the selected event in db
     '''
     print 'result request = ' , request.POST
-
-
     # accept the request
     query_object = request.POST
     print 'query_object = ', query_object
@@ -130,7 +91,6 @@ def result(request):
     local_event_instance = helper.db_return_query_object_by_id(event_id)
     local_event_instance.update(line_up=helper.list_to_string_or_back(lineup))
     print 'event lineup saved in exit view'
-
 
     # get event name form id
     event_name = helper.db_search_by_id(event_id)['name']
@@ -156,17 +116,13 @@ def victory(request):
     this is where the magic happens
     '''
     print 'exit request = ', request.POST
-
     '''
     create or get session
     '''
     sid = request.session._get_or_create_session_key()
     print 'session id  = ', sid
-    # sid = '123'
     top_x_tracks, client_id, client_secret, redirect_uri = main.initialise()
     spot_token, username = main.init_spot(redirect_uri, client_id, client_secret, sid)
-
-
     '''
     parse form
     '''
@@ -181,24 +137,13 @@ def victory(request):
         public = form.cleaned_data['public']
         top_x_tracks = form.cleaned_data['top_x_tracks']
         event_id = form.cleaned_data['event_id']
-
         print 'type(event_id) = ', type(event_id)
-
         '''
         if line_up is already there
         partyflock will give us line up here
         '''
-
 	# get source (partyflock) and source_id
-
-        party = Events.objects.filter(id=unicodetostring(event_id))
-        party_values = party.values()
-        source = unicodetostring(party_values[0]['source'])
-        source_id = unicodetostring(party_values[0]['source_id'])
-        lineup = helper.list_to_string_or_back(unicodetostring(party_values[0]['line_up']))
-        print 'lineup type', type(lineup)
-        print 'bron = ' , source, source_id
-
+        lineup = helper.return_lineup_from_db(event_id)
 
         #  'save submitted data in session'
         for k, v in form.cleaned_data.iteritems():
@@ -206,10 +151,6 @@ def victory(request):
 
         # if spot token[0] is false (see spotify file get_token function) then there is no token in cache
         if not spot_token[0]:
-
-            # submitted_data = ['playlist_name','public','top_x_tracks','event_id']
-            # map(save_in_session, submitted_data)
-
             print 'no spot token and thus redirect to spot and then back to callspot'
             # and therefore user needs to be redirected to spot_token[1], wich is the auth_url
             #when user comes back from that he will arrive at our redirect_uri, wich is callspot
@@ -227,13 +168,7 @@ def victory(request):
             return redirect(index)
 
 
-    party = Events.objects.filter(id=unicodetostring(event_id))
-    party_values = party.values()
-    source = unicodetostring(party_values[0]['source'])
-    source_id = unicodetostring(party_values[0]['source_id'])
-    print 'bron = ' , source, source_id
-
-    lineup = helper.list_to_string_or_back(unicodetostring(party_values[0]['line_up']))
+    lineup = helper.return_lineup_from_db(event_id)
 
     '''
     Spotify happens below
@@ -251,10 +186,7 @@ def victory(request):
     '''
     Give context to HTML to print to browser
     '''
-
     template = loader.get_template('form/victory.html')
-
-
     context = {
         # 'lineup': lineup,
         'playlist_name': playlist_name,
@@ -265,7 +197,6 @@ def victory(request):
         'lineup': lineup,
         'victory_or_defeat': 'victory'
     }
-
     if artist_ids == []:
         context['victory_or_defeat'] = 'defeat'
 
