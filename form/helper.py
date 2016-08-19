@@ -38,7 +38,7 @@ def return_lineup_from_db(event_id):
     party_values = party.values()
     source = unicodetostring(party_values[0]['source'])
     source_id = unicodetostring(party_values[0]['source_id'])
-    lineup = helper.list_to_string_or_back(unicodetostring(party_values[0]['line_up']))
+    lineup = list_to_string_or_back(unicodetostring(party_values[0]['line_up']))
     print 'bron = ' , source, source_id
     return lineup
 
