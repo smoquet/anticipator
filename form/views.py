@@ -55,8 +55,8 @@ def index(request):
                 partyflock_number_of_results = 5-len(search_result_key_value_pairs)
                 helper.partyflock_search_and_save(event_query, partyflock_number_of_results)
 
+                # then return the result from the db again
             search_result_key_value_pairs = helper.db_event_search(event_query)
-
             template = loader.get_template('form/results.html')
             form = DatabaseLookupForm()
             context =   {'form': form, 'event_query':event_query, 'search_result_key_value_pairs':search_result_key_value_pairs}
