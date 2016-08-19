@@ -12,6 +12,14 @@ def list_to_string_or_back(list_or_string):
     if type(list_or_string) == str:
         return literal_eval(list_or_string)
 
+def return_lineup_from_db(event_id):
+    party = Events.objects.filter(id=unicodetostring(event_id))
+    party_values = party.values()
+    source = unicodetostring(party_values[0]['source'])
+    source_id = unicodetostring(party_values[0]['source_id'])
+    lineup = helper.list_to_string_or_back(unicodetostring(party_values[0]['line_up']))
+    print 'bron = ' , source, source_id
+    return lineup
 
 def db_event_search(event_query):
     '''
