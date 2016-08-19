@@ -50,9 +50,15 @@ def index(request):
             '''
              Partyflock lookup: if there are no results in our db, search partyflock and save result in db
             '''
-            if len(search_result_key_value_pairs) == 0:
-                partyflock_number_of_results = 5
+
+            if len(search_result_key_value_pairs) < 5:
+                partyflock_number_of_results = 5-len(search_result_key_value_pairs)
                 helper.partyflock_search_and_save(event_query, partyflock_number_of_results)
+
+
+            # if len(search_result_key_value_pairs) == 0:
+            #     partyflock_number_of_results = 5
+            #     helper.partyflock_search_and_save(event_query, partyflock_number_of_results)
                 # then return the result from the db again
 
             search_result_key_value_pairs = helper.db_event_search(event_query)
