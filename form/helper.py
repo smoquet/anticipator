@@ -1,6 +1,8 @@
 from form.models import *
 import unicodedata
 from ast import literal_eval
+from pf_api import pf_api
+from datetime import datetime
 
 def unicodetostring(unicode):
     string_out = unicodedata.normalize('NFKD', unicode).encode('ascii','ignore')
@@ -12,6 +14,24 @@ def list_to_string_or_back(list_or_string):
     if type(list_or_string) == str:
         return literal_eval(list_or_string)
 
+def partyflock_search_and_save(event_query, partyflock_number_of_results):
+    '''
+    expects a query as string, and a max number_of_results as int
+    searches for event in Partyflock
+    and saves result to DatabaseLookupForm
+    return nothing
+    '''
+    pf_events = pf_api.eventsearch(event_query, partyflock_number_of_results)
+    print 'pf_events = ', pf_events
+
+    for x in range(min([partyflock_number_of_results, len(pf_events)])):
+        stamp = pf_events[x]['stamp']
+        date = datetime.fromtimestamp(stamp).strftime('%Y/%m/%d').replace('/', '-')
+        source_id = pf_events[x]['id']
+        name = unicodedata.normalize('NFKD', pf_events[x]['name']).encode('ascii','ignore').lower()
+        source = 'partyflock'
+        eventinstance = Events(name=name, date=date, source_id=source_id, source=source )
+        eventinstance.save()
 
 def db_event_search(event_query):
     '''

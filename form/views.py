@@ -10,7 +10,6 @@ from django.shortcuts import redirect
 from .forms import NameForm, DatabaseLookupForm
 from vpg import *
 from pf_api import pf_api
-
 from datetime import datetime
 
 import os
@@ -30,69 +29,36 @@ def unicodetostring(unicode):
     return string_out
 
 def index(request):
+
     print 'index entered'
     '''
     asks user for event_query search and looks up the results in the DB
     if no result, then look in Partyflock and store results in db, then look again
-
     '''
-
 
     if request.method == 'POST':
         print 'search POST entered'
         # create the searchform instance and populate it with data from the request:
         form = DatabaseLookupForm(request.POST)
         if form.is_valid():
-            print 'form is valid'
             # assign the form input to the variable event_query
             event_query_unicode = form.cleaned_data['event_query']
             event_query = unicodedata.normalize('NFKD', event_query_unicode).encode('ascii','ignore')
             # search for the query in the db
             print 'query = ' , event_query
-
             search_result_key_value_pairs = helper.db_event_search(event_query)
-            print 'search_result_key_value_pairs = ', search_result_key_value_pairs
-
             '''
              Partyflock lookup: if there are no results in our db, search partyflock and save result in db
             '''
-
             if len(search_result_key_value_pairs) == 0:
                 partyflock_number_of_results = 5
-
-                pf_events = pf_api.eventsearch(event_query, partyflock_number_of_results)
-
-                # print pf_api.eventsearch('frenchcore', 1)
-                # pf_api.lineupsearch(4653845638475)
-                # print pf_api.testfunct()
-                print 'pf_events = ', pf_events
-
-                for x in range(min([partyflock_number_of_results, len(pf_events)])):
-                    stamp = pf_events[x]['stamp']
-                    date = datetime.fromtimestamp(stamp).strftime('%Y/%m/%d').replace('/', '-')
-                    source_id = pf_events[x]['id']
-                    name = unicodedata.normalize('NFKD', pf_events[x]['name']).encode('ascii','ignore').lower()
-                    source = 'partyflock'
-                    eventinstance = Events(name=name, date=date, source_id=source_id, source=source )
-                    eventinstance.save()
-
+                helper.partyflock_search_and_save(event_query, partyflock_number_of_results)
                 # then return the result from the db again
-                print 'query = ' , event_query
 
             search_result_key_value_pairs = helper.db_event_search(event_query)
-            print 'search_result_key_value_pairs PF if = ', search_result_key_value_pairs
-            # assign search.html in template variable
+
             template = loader.get_template('form/results.html')
-            # fill in context
-
-
-
-            search_result_key_value_pairs
-            print 'search_result_key_value_pairs', search_result_key_value_pairs
-            context = { 'event_query':event_query, 'search_result_key_value_pairs':search_result_key_value_pairs}
-
             form = DatabaseLookupForm()
-
             context =   {'form': form, 'event_query':event_query, 'search_result_key_value_pairs':search_result_key_value_pairs}
             return HttpResponse(template.render(context, request))
 
