@@ -33,6 +33,15 @@ def partyflock_search_and_save(event_query, partyflock_number_of_results):
         eventinstance = Events(name=name, date=date, source_id=source_id, source=source )
         eventinstance.save()
 
+def return_lineup_from_db(event_id):
+    party = Events.objects.filter(id=unicodetostring(event_id))
+    party_values = party.values()
+    source = unicodetostring(party_values[0]['source'])
+    source_id = unicodetostring(party_values[0]['source_id'])
+    lineup = helper.list_to_string_or_back(unicodetostring(party_values[0]['line_up']))
+    print 'bron = ' , source, source_id
+    return lineup
+
 def db_event_search(event_query):
     '''
     takes a query and returns a list of events as id:name key_value_pairs
