@@ -1,9 +1,6 @@
 .row {
   .card-container {
-    float: left;
-    position: relative;
     width: 100%;
-    margin-left: 0%;
     z-index: 1;
     padding: 40px;
     @media #{$medium-up} {
@@ -17,7 +14,7 @@
 }
 
 .card {
-  box-shadow: rgba(0, 0, 0, 0.156863) 0px 2px 5px 0px;
+  box-shadow: rgba(0, 0, 0, 0.156863) 0 2px 5px 0;
 }
 
 #button {
@@ -29,23 +26,18 @@
   background-size: cover;
   text-decoration: none;
   width: 100%;
-  border-width: initial;
-  border-style: none;
-  border-color: initial;
+  border: none;
 }
 
 .cardinfo {
-  padding-top: 10px;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding: 10px 10px 0 10px;
   width: 100%;
 
 }
 
 .generate-list {
-  padding-left: 10px;
-  padding-top: 12px;
-  height: 50px;
+  padding: 10px 10px 0 10px;
+  height: 40px;
   color: orange;
   width: 100%;
   background-color: white;
