@@ -51,13 +51,15 @@ def index(request):
              Partyflock lookup: if there are less than 5 results in db, search partyflock n (max4) times and save result in db
             '''
 
+
             if len(search_result_key_value_pairs) < 5:
                 partyflock_number_of_results = 5-len(search_result_key_value_pairs)
                 helper.partyflock_search_and_save(event_query, partyflock_number_of_results)
 
+
                 # then return the result from the db again
             search_result_key_value_pairs = helper.db_event_search(event_query)
-<<<<<<< HEAD
+
             print 'search_result_key_value_pairs PF if = ', search_result_key_value_pairs
             # assign search.html in template variable
             template = loader.get_template('form/pages/results.html')
@@ -69,9 +71,6 @@ def index(request):
             print 'search_result_key_value_pairs', search_result_key_value_pairs
             context = { 'event_query':event_query, 'search_result_key_value_pairs':search_result_key_value_pairs}
 
-=======
-            template = loader.get_template('form/results.html')
->>>>>>> master
             form = DatabaseLookupForm()
             context =   {'form': form, 'event_query':event_query, 'search_result_key_value_pairs':search_result_key_value_pairs}
             return HttpResponse(template.render(context, request))
@@ -156,7 +155,8 @@ def victory(request):
         if line_up is already there
         partyflock will give us line up here
         '''
-	# get source (partyflock) and source_id
+
+    # get source (partyflock) and source_id
         lineup = helper.return_lineup_from_db(event_id)
 
         #  'save submitted data in session'
@@ -200,14 +200,12 @@ def victory(request):
     '''
     Give context to HTML to print to browser
     '''
-<<<<<<< HEAD
+
 
     template = loader.get_template('form/pages/victory.html')
 
 
-=======
-    template = loader.get_template('form/victory.html')
->>>>>>> master
+
     context = {
         # 'lineup': lineup,
         'playlist_name': playlist_name,

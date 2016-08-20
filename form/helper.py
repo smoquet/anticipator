@@ -1,4 +1,5 @@
 from form.models import *
+import time
 import unicodedata
 from ast import literal_eval
 from pf_api import pf_api
@@ -77,3 +78,27 @@ def db_search_by_id(event_query):
 
 def db_return_query_object_by_id(event_query):
     return Events.objects.filter(id=event_query)
+
+def find_next_event(events):
+    '''
+    find the next event - ie the closest in the future
+    expects events list with ['stamp']
+    returns index integer
+    '''
+
+    '''
+    het gaat nu mis omdat de events niet gesort zijn denk ik
+    '''
+
+    now = time.time()
+    print 'now is', now
+    for index, event in enumerate(events):
+        # since events are reverse chronologically, this iterates just past the next
+        print index, event['stamp']
+        print str(now < event['stamp'])
+        if now < event['stamp']:
+            next
+        else:
+            return index - 1 if index > 0 else 0
+    # all parties are in the future, return first
+    return 0
