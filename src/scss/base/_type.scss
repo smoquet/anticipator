@@ -1,0 +1,57 @@
+$default-font: 'Helvetica';
+
+body {
+  font-family: $default-font;
+  color: $color-font;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+strong,
+em {
+  margin: 0 0 20px 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+p {
+  font-size: 14px;
+
+  @media #{$medium-up} {
+    font-size: 16px;
+
+  }
+}
+
+a {
+  color: $color-primary;
+  &:hover {
+    color: lighten($color-primary, 20%);
+    @include transition(all 0.4s ease-in);
+  }
+}
+
+.item-holder {
+  @include row();
+  .item {
+    // mobile here
+
+    @media #{$medium-up} {
+      // tablet here
+      @include column(6);
+
+    }
+
+    @media #{$large-up} {
+      // desktop here
+      @include column(4);
+    }
+  }
+}
+
+

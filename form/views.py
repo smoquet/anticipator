@@ -82,7 +82,7 @@ def index(request):
             search_result_key_value_pairs = helper.db_event_search(event_query)
             print 'search_result_key_value_pairs PF if = ', search_result_key_value_pairs
             # assign search.html in template variable
-            template = loader.get_template('form/results.html')
+            template = loader.get_template('form/pages/results.html')
             # fill in context
 
 
@@ -98,7 +98,7 @@ def index(request):
 
     # if the form is not filled in is thus GET
     form = DatabaseLookupForm()
-    return render(request, 'form/index.html', {'form': form})
+    return render(request, 'form/pages/index.html', {'form': form})
 
 
 
@@ -145,7 +145,7 @@ def result(request):
     # return render(request, 'form/result.html', {'form': form})
 
     #2e return poging lukt
-    template = loader.get_template('form/result.html')
+    template = loader.get_template('form/pages/result.html')
     context =   {'form': form}
     return HttpResponse(template.render(context, request))
 
@@ -252,7 +252,7 @@ def victory(request):
     Give context to HTML to print to browser
     '''
 
-    template = loader.get_template('form/victory.html')
+    template = loader.get_template('form/pages/victory.html')
 
 
     context = {
@@ -297,7 +297,7 @@ def vpgtest(request):
             return redirect(spot_token[1])
     artist_ids = spotify.artist_id_list_gen(lineup, spot_token)
     track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token)
-    template = loader.get_template('form/result.html')
+    template = loader.get_template('form/pages/result.html')
     context = {
         'lineup': track_id_list
     }
