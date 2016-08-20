@@ -21,26 +21,34 @@ header {
     width: 100%;
     padding-right: 40px;
     text-align: center;
+    padding-top:10px;
+
 
     @media #{$small-up} {
       font-size: 40px;
-      margin-top: 20px;
+
 
     }
 
     @media #{$medium-up} {
       font-size: 40px;
-      margin-top: 20px;
+
 
     }
 
     @media #{$large-up} {
       font-size: 40px;
-      margin-top: 20px;
+
 
     }
   }
 }
+
+.title a {
+  text-decoration: none;
+  color: #444;
+}
+
 
 .top-nav-collapse {
   padding: 200px;

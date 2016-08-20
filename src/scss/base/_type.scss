@@ -28,30 +28,30 @@ p {
   }
 }
 
-a {
-  color: $color-primary;
-  &:hover {
-    color: lighten($color-primary, 20%);
-    @include transition(all 0.4s ease-in);
-  }
-}
-
-.item-holder {
-  @include row();
-  .item {
-    // mobile here
-
-    @media #{$medium-up} {
-      // tablet here
-      @include column(6);
-
-    }
-
-    @media #{$large-up} {
-      // desktop here
-      @include column(4);
-    }
-  }
-}
+//a {
+//  color: $color-primary;
+//  &:hover {
+//    color: lighten($color-primary, 20%);
+//    @include transition(all 0.4s ease-in);
+//  }
+//}
+//
+//.item-holder {
+//  @include row();
+//  .item {
+//    // mobile here
+//
+//    @media #{$medium-up} {
+//      // tablet here
+//      @include column(6);
+//
+//    }
+//
+//    @media #{$large-up} {
+//      // desktop here
+//      @include column(4);
+//    }
+//  }
+//}
 
 
