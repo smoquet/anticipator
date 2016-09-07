@@ -1,0 +1,18 @@
+$site-width: 1280px;
+$site-left: 40px;
+$site-right: 40px;
+
+.container {
+  max-width: $site-width;
+  padding-left: $site-left;
+  padding-right: $site-right;
+  margin: auto;
+}
+
+body {
+    background-color: white;
+}
+
+.top {
+  padding-top:140px;
+}

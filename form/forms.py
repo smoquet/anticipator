@@ -18,4 +18,4 @@ class NameForm(forms.Form):
 
 
 class DatabaseLookupForm(forms.Form):
-    event_query = forms.CharField(label='Event name', max_length=200)
+    event_query = forms.CharField(label='',widget=forms.TextInput(attrs={'placeholder': 'Search for events'}), max_length=200)

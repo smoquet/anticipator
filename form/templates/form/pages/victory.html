@@ -1,0 +1,30 @@
+{% extends "form/templates/layout.html" %}
+
+{% block content %}
+  <div>
+    Playlist generated!
+  </div>
+</br>
+
+  <div>
+    Artists:
+  </div>
+
+  <div class="one">
+    {% for artist in lineup %}
+        <li>{{ artist }}</li>
+    {% endfor %}
+  </div>
+
+  </br>
+  </br>
+  </br>
+  <div>
+    PS: Fuck MC's!
+  </div>
+
+</div>
+
+</body>
+
+{% endblock %}

@@ -35,7 +35,9 @@ def index(request):
     asks user for event_query search and looks up the results in the DB
     if no result, then look in Partyflock and store results in db, then look again
     '''
+
     event_ids = []
+
     if request.method == 'POST':
         print 'search POST entered'
         # create the searchform instance and populate it with data from the request:
@@ -50,6 +52,8 @@ def index(request):
             '''
              Partyflock lookup: if there are less than 5 results in db, search partyflock n (max4) times and save result in db
             '''
+
+
             for x in search_result_key_value_pairs:
                 event_ids.append(x[0])
             if len(search_result_key_value_pairs) < 5:
@@ -57,13 +61,19 @@ def index(request):
 
                 # then return the result from the db again
             search_result_key_value_pairs = helper.db_event_search(event_query)
-            template = loader.get_template('form/results.html')
+            template = loader.get_template('form/pages/results.html')
+
             form = DatabaseLookupForm()
-            context =   {'form': form, 'event_query':event_query, 'search_result_key_value_pairs':search_result_key_value_pairs}
+            context = { 'event_query':event_query, 'search_result_key_value_pairs':search_result_key_value_pairs}
+
+            '''
+            deze context hier onder is de gene die in frontend HEAD
+            '''
+            # context =   {'form': form, 'event_query':event_query, 'search_result_key_value_pairs':search_result_key_value_pairs}
             return HttpResponse(template.render(context, request))
     # if the form is not filled in is thus GET
     form = DatabaseLookupForm()
-    return render(request, 'form/index.html', {'form': form})
+    return render(request, 'form/pages/index.html', {'form': form})
 
 def result(request):
     '''
@@ -101,7 +111,7 @@ def result(request):
     # and pass it all to exit
 
     #2e return poging lukt
-    template = loader.get_template('form/result.html')
+    template = loader.get_template('form/pages/result.html')
     context =   {'form': form}
     return HttpResponse(template.render(context, request))
 
@@ -138,7 +148,7 @@ def victory(request):
         if line_up is already there
         partyflock will give us line up here
         '''
-	# get source (partyflock) and source_id
+
         lineup = helper.return_lineup_from_db(event_id)
 
         #  'save submitted data in session'
@@ -182,7 +192,9 @@ def victory(request):
     '''
     Give context to HTML to print to browser
     '''
-    template = loader.get_template('form/victory.html')
+
+    template = loader.get_template('form/pages/victory.html')
+
 
     context = {
         # 'lineup': lineup,
@@ -226,7 +238,7 @@ def vpgtest(request):
             return redirect(spot_token[1])
     artist_ids = spotify.artist_id_list_gen(lineup, spot_token)
     track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token)
-    template = loader.get_template('form/result.html')
+    template = loader.get_template('form/pages/result.html')
     context = {
         'lineup': track_id_list
     }
