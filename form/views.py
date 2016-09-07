@@ -148,12 +148,7 @@ def victory(request):
         if line_up is already there
         partyflock will give us line up here
         '''
-<<<<<<< HEAD
 
-    # get source (partyflock) and source_id
-=======
-	# get source (partyflock) and source_id
->>>>>>> master
         lineup = helper.return_lineup_from_db(event_id)
 
         #  'save submitted data in session'
@@ -197,14 +192,9 @@ def victory(request):
     '''
     Give context to HTML to print to browser
     '''
-<<<<<<< HEAD
-
 
     template = loader.get_template('form/pages/victory.html')
 
-=======
-    template = loader.get_template('form/victory.html')
->>>>>>> master
 
     context = {
         # 'lineup': lineup,
