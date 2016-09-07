@@ -1,0 +1,46 @@
+.row {
+  .card-container {
+    width: 100%;
+    z-index: 1;
+    padding: 40px;
+    @media #{$medium-up} {
+      @include column(6);
+    }
+
+    @media #{$large-up} {
+      @include column(4);
+    }
+  }
+}
+
+.card {
+  box-shadow: rgba(0, 0, 0, 0.156863) 0 2px 5px 0;
+}
+
+#button {
+  cursor: pointer;
+  height: 150px;
+  font-size: 14px;
+  color: white;
+  background-image: url("https://i.ytimg.com/vi/w6JLlwCgIS0/maxresdefault.jpg");
+  background-size: cover;
+  text-decoration: none;
+  width: 100%;
+  border: none;
+}
+
+.cardinfo {
+  padding: 10px 10px 0 10px;
+  width: 100%;
+
+}
+
+.generate-list {
+  padding: 10px 10px 0 10px;
+  height: 40px;
+  color: orange;
+  width: 100%;
+  background-color: white;
+  border-top: 1px solid lightgrey;
+}
+
