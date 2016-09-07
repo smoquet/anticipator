@@ -163,3 +163,4 @@ def write_playlist(track_id_list, playlist_name, spot_token, username):
             # print track_id_list[i*100:]
             spotify.user_playlist_add_tracks(username, playlist_id, track_id_list[i*100:], position=None)
     print "exit write_playlist", time.clock()
+    return playlist_id

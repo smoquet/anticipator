@@ -36,6 +36,8 @@ def index(request):
     if no result, then look in Partyflock and store results in db, then look again
     '''
 
+    event_ids = []
+
     if request.method == 'POST':
         print 'search POST entered'
         # create the searchform instance and populate it with data from the request:
@@ -52,27 +54,22 @@ def index(request):
             '''
 
 
+            for x in search_result_key_value_pairs:
+                event_ids.append(x[0])
             if len(search_result_key_value_pairs) < 5:
-                partyflock_number_of_results = 5-len(search_result_key_value_pairs)
-                helper.partyflock_search_and_save(event_query, partyflock_number_of_results)
-
+                helper.partyflock_search_and_save(event_query, event_ids)
 
                 # then return the result from the db again
             search_result_key_value_pairs = helper.db_event_search(event_query)
-
-            print 'search_result_key_value_pairs PF if = ', search_result_key_value_pairs
-            # assign search.html in template variable
             template = loader.get_template('form/pages/results.html')
-            # fill in context
-
-
-
-            search_result_key_value_pairs
-            print 'search_result_key_value_pairs', search_result_key_value_pairs
-            context = { 'event_query':event_query, 'search_result_key_value_pairs':search_result_key_value_pairs}
 
             form = DatabaseLookupForm()
-            context =   {'form': form, 'event_query':event_query, 'search_result_key_value_pairs':search_result_key_value_pairs}
+            context = { 'event_query':event_query, 'search_result_key_value_pairs':search_result_key_value_pairs}
+
+            '''
+            deze context hier onder is de gene die in frontend HEAD
+            '''
+            # context =   {'form': form, 'event_query':event_query, 'search_result_key_value_pairs':search_result_key_value_pairs}
             return HttpResponse(template.render(context, request))
     # if the form is not filled in is thus GET
     form = DatabaseLookupForm()
@@ -113,10 +110,6 @@ def result(request):
     form = NameForm(initial={'event_id': event_id, 'playlist_name':event_name })
     # and pass it all to exit
 
-    # 1e return poging, faalde
-    # context =   {'event_id': event_id}
-    # return render(request, 'form/result.html', {'form': form})
-
     #2e return poging lukt
     template = loader.get_template('form/pages/result.html')
     context =   {'form': form}
@@ -155,8 +148,12 @@ def victory(request):
         if line_up is already there
         partyflock will give us line up here
         '''
+<<<<<<< HEAD
 
     # get source (partyflock) and source_id
+=======
+	# get source (partyflock) and source_id
+>>>>>>> master
         lineup = helper.return_lineup_from_db(event_id)
 
         #  'save submitted data in session'
@@ -195,16 +192,19 @@ def victory(request):
     # handles the exception when there isnt a single result from artist searches in spotify
     if artist_ids != []:
         track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token[1])
-        spotify.write_playlist(track_id_list, playlist_name, spot_token[1], username)
+        playlist_id = spotify.write_playlist(track_id_list, playlist_name, spot_token[1], username)
 
     '''
     Give context to HTML to print to browser
     '''
+<<<<<<< HEAD
 
 
     template = loader.get_template('form/pages/victory.html')
 
-
+=======
+    template = loader.get_template('form/victory.html')
+>>>>>>> master
 
     context = {
         # 'lineup': lineup,
@@ -214,6 +214,7 @@ def victory(request):
         'top_x_tracks':top_x_tracks,
         'event_id': event_id,
         'lineup': lineup,
+        'playlist_id': playlist_id,
         'victory_or_defeat': 'victory'
     }
     if artist_ids == []:

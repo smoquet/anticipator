@@ -15,24 +15,29 @@ def list_to_string_or_back(list_or_string):
     if type(list_or_string) == str:
         return literal_eval(list_or_string)
 
-def partyflock_search_and_save(event_query, partyflock_number_of_results):
+def partyflock_search_and_save(event_query, event_ids):
     '''
-    expects a query as string, and a max number_of_results as int
+    expects a query as string, and a list of id's of already found events in db
     searches for event in Partyflock
-    and saves result to DatabaseLookupForm
+    and saves result to DatabaseLookupForm if not already in there
     return nothing
     '''
-    pf_events = pf_api.eventsearch(event_query, partyflock_number_of_results)
+    partyflock_ids =[]
+    if event_ids != []:
+        for x in event_ids:
+            partyflock_ids.append(db_search_by_id(x)['source_id'])
+    pf_events = pf_api.eventsearch(event_query, 6)
     print 'pf_events = ', pf_events
-
-    for x in range(min([partyflock_number_of_results, len(pf_events)])):
-        stamp = pf_events[x]['stamp']
-        date = datetime.fromtimestamp(stamp).strftime('%Y/%m/%d').replace('/', '-')
+    for x in range(min([6, len(pf_events)])):
         source_id = pf_events[x]['id']
-        name = unicodedata.normalize('NFKD', pf_events[x]['name']).encode('ascii','ignore').lower()
-        source = 'partyflock'
-        eventinstance = Events(name=name, date=date, source_id=source_id, source=source )
-        eventinstance.save()
+        if str(source_id) not in partyflock_ids:
+            stamp = pf_events[x]['stamp']
+            date = datetime.fromtimestamp(stamp).strftime('%Y/%m/%d').replace('/', '-')
+            name = unicodedata.normalize('NFKD', pf_events[x]['name']).encode('ascii','ignore').lower()
+            source = 'partyflock'
+            eventinstance = Events(name=name, date=date, source_id=source_id, source=source )
+            eventinstance.save()
+
 
 def return_lineup_from_db(event_id):
     party = Events.objects.filter(id=unicodetostring(event_id))
