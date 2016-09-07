@@ -100,10 +100,6 @@ def result(request):
     form = NameForm(initial={'event_id': event_id, 'playlist_name':event_name })
     # and pass it all to exit
 
-    # 1e return poging, faalde
-    # context =   {'event_id': event_id}
-    # return render(request, 'form/result.html', {'form': form})
-
     #2e return poging lukt
     template = loader.get_template('form/result.html')
     context =   {'form': form}
