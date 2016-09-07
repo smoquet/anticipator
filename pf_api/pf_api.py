@@ -2,6 +2,7 @@
 from Naked.toolshed.shell import muterun_js
 import json
 import time
+import os
 import unicodedata
 
 def unicodetostring(unicode):
@@ -33,9 +34,12 @@ def eventsearch(query, num):
     '''
 
     args = 'eventsearch' + ' "' + query + '"'
+    # initial stub implementation
+    if os.environ.get('PF_STUB'):
+        return [{u'stamp': 1471140000, u'id': 327656, u'name': u'Morning Beats'}, {u'stamp': 1473442200, u'id': 327428, u'name': u'Najaarsbeats'}]
     loaded_json = event_run(args)
 
-    # print loaded_json.stdout
+    # print loaded_json
 
     try:
         parties = loaded_json['0']['party']['party']
