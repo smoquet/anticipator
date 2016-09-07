@@ -35,7 +35,7 @@ def index(request):
     asks user for event_query search and looks up the results in the DB
     if no result, then look in Partyflock and store results in db, then look again
     '''
-
+    event_ids = []
     if request.method == 'POST':
         print 'search POST entered'
         # create the searchform instance and populate it with data from the request:
@@ -50,10 +50,10 @@ def index(request):
             '''
              Partyflock lookup: if there are less than 5 results in db, search partyflock n (max4) times and save result in db
             '''
-
+            for x in search_result_key_value_pairs:
+                event_ids.append(x[0])
             if len(search_result_key_value_pairs) < 5:
-                partyflock_number_of_results = 5-len(search_result_key_value_pairs)
-                helper.partyflock_search_and_save(event_query, partyflock_number_of_results)
+                helper.partyflock_search_and_save(event_query, event_ids)
 
                 # then return the result from the db again
             search_result_key_value_pairs = helper.db_event_search(event_query)
