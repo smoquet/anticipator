@@ -1,0 +1,32 @@
+$default-font: 'Helvetica';
+
+body {
+  font-family: $default-font;
+  color: $color-font;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+strong,
+em {
+  margin: 0 0 20px 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+p {
+  font-size: 14px;
+
+  @media #{$medium-up} {
+    font-size: 16px;
+
+  }
+}
+
+
+

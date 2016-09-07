@@ -1,0 +1,48 @@
+{% extends "form/templates/layout.html" %}
+
+{% block content %}
+    <div class='results'>
+        <div class="row">
+            {% if event_names != '' %}
+
+                {% for key_value_pair in search_result_key_value_pairs %}
+                    <div class="card-container">
+                        <div class="card">
+                            <div class="card-title">
+                                <form class="result_list" action="/result" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" id="button" name="id"
+                                            value="{{ key_value_pair.0 }}">{{ key_value_pair.1 }}</button>
+                                </form>
+                            </div>
+
+
+                            <div class="cardinfo">
+                                <p>Lorem ipsum dolor
+                                    sit amet, consectetur
+                                    adipisicing elit. Ab asperiores at consequuntur
+                                </p>
+                            </div>
+                            <div class="generate-list">
+                                <p> Generate playlist!</p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                {% endfor %}
+
+            {% endif %}
+
+
+
+
+
+            {% if event_names == '' %}
+                <p>Computer says no. (no results found)
+
+                    Please search again</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

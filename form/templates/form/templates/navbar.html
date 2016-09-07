@@ -1,0 +1,16 @@
+<header>
+    <div class="titlecontainer">
+        <div class="title"><a href="{{ index }}">ANTICIPATOR</a></div>
+    </div>
+
+
+    <div class="search-container">
+        <div class='form'>
+            <form action="/" method="post">
+                {% csrf_token %}
+                {{ form.as_table }}
+                <input type="submit" value="S" class='image_submit'/>
+            </form>
+        </div>
+    </div>
+</header>
