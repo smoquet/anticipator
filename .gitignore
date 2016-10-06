@@ -7,7 +7,7 @@ dist/
 db.sqlite3
 venv
 staticfiles
-env
+env/
 .idea
 pf.secret
 node_modules/

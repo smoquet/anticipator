@@ -93,7 +93,7 @@ def result(request):
     # saves the corresponding line_up in db
     party = Events.objects.filter(id=unicodetostring(event_id))
     party_values = party.values()
-    source_id = unicodetostring(party_values[0]['source_id'])
+    source_id = party_values[0]['source_id']
     # get lineup;
     lineup = pf_api.lineupsearch(str(source_id))
     # print 'result view lineup = ', lineup
