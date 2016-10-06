@@ -7,6 +7,8 @@ requirements:
 - virtualenv (well, recommended)
 - postgresql (well, just pg_config actually.)
 - node
+- npm install
+- gulp sass
 - pip install -r requirements.txt
 - a PF api key in pf_api/pf.secret (good luck with that)
 
