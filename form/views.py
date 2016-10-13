@@ -185,10 +185,12 @@ def victory(request):
     artist_ids = spotify.artist_id_list_gen(lineup, spot_token[1])
 
     # handles the exception when there isnt a single result from artist searches in spotify
+
     if artist_ids != []:
         track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token[1])
         playlist_id = spotify.write_playlist(track_id_list, playlist_name, spot_token[1], username)
 
+    
     '''
     Give context to HTML to print to browser
     '''
@@ -204,7 +206,7 @@ def victory(request):
         'top_x_tracks':top_x_tracks,
         'event_id': event_id,
         'lineup': lineup,
-        'playlist_id': playlist_id,
+        # 'playlist_link': playlist_link,
         'victory_or_defeat': 'victory'
     }
     if artist_ids == []:
