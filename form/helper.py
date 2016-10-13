@@ -95,10 +95,6 @@ def find_next_event(events):
     returns index integer
     '''
 
-    '''
-    het gaat nu mis omdat de events niet gesort zijn denk ik
-    '''
-
     now = time.time()
     print 'now is', now
     for index, event in enumerate(events):

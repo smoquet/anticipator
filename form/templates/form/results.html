@@ -1,0 +1,56 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang = 'en'>
+<head>
+  <meta  charset="UTF-8">
+  <title> Anticipator </title>
+  <link rel="stylesheet" type="text/css" href="{% static 'form/normalize.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'form/resultstyle.css' %}" />
+  <link href='https://fonts.googleapis.com/css?family=Candal' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+
+<div class="background" >
+  <div class="title">
+    Anticipator
+  </div>
+
+  <div class = 'form'>
+    <form action="/" method="post">
+      {% csrf_token %}
+        <table>
+         {{form.as_table}}
+       </table>
+       <div id = 'submit'>
+        <input type="image" src='../../static/pictures/play.png' value="Submit" class = 'image_submit'/>
+      </div>
+    </form>
+  </div>
+
+<div class = 'results'>
+{% if event_names != '' %}
+Select your event
+    <ul>
+{% for key_value_pair in search_result_key_value_pairs %}
+        <li>
+					<form class="result_list" action="/result" method="post">
+						{% csrf_token %}
+						<button  type="submit" name="id" value="{{ key_value_pair.0 }}">{{ key_value_pair.1 }}</button>
+					</form>
+				</li>
+{% endfor %}
+    </ul>
+{% endif %}
+{% if event_names == '' %}
+    <p>Computer says no. (no results found)
+    </br>
+  </br>
+   Please search again</p>
+{% endif %}
+</div>
+
+</div>
+</div>
+</body>
