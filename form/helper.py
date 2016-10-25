@@ -22,22 +22,26 @@ def partyflock_search_and_save(event_query, event_ids):
     and saves result to DatabaseLookupForm if not already in there
     return nothing
     '''
+    partyflock_number_of_results = 6
     partyflock_ids =[]
     if event_ids != []:
         for x in event_ids:
             partyflock_ids.append(db_search_by_id(x)['source_id'])
-    pf_events = pf_api.eventsearch(event_query, 6)
+    pf_events = pf_api.eventsearch(event_query, partyflock_number_of_results)
     print 'pf_events = ', pf_events
-    for x in range(min([6, len(pf_events)])):
-        source_id = pf_events[x]['id']
-        if str(source_id) not in partyflock_ids:
-            stamp = pf_events[x]['stamp']
-            date = datetime.fromtimestamp(stamp).strftime('%Y/%m/%d').replace('/', '-')
-            name = unicodedata.normalize('NFKD', pf_events[x]['name']).encode('ascii','ignore').lower()
-            source = 'partyflock'
-            eventinstance = Events(name=name, date=date, source_id=source_id, source=source )
-            eventinstance.save()
-
+    next_event_index = find_next_event(pf_events)
+    print 'next event = ', next_event_index
+    for x in range(min([partyflock_number_of_results, len(pf_events)])):
+        next_event = next_event_index + x
+        if next_event > (len(pf_events) - 1):
+            next_event = next_event_index - (x - eventinstance.count)
+        stamp = pf_events[next_event]['stamp']
+        date = datetime.fromtimestamp(stamp).strftime('%Y/%m/%d').replace('/', '-')
+        source_id = pf_events[next_event]['id']
+        name = unicodedata.normalize('NFKD', pf_events[next_event]['name']).encode('ascii','ignore').lower()
+        source = 'partyflock'
+        eventinstance = Events(name=name, date=date, source_id=source_id, source=source )
+        eventinstance.save()
 
 def return_lineup_from_db(event_id):
     party = Events.objects.filter(id=unicodetostring(event_id))
@@ -89,10 +93,6 @@ def find_next_event(events):
     find the next event - ie the closest in the future
     expects events list with ['stamp']
     returns index integer
-    '''
-
-    '''
-    het gaat nu mis omdat de events niet gesort zijn denk ik
     '''
 
     now = time.time()

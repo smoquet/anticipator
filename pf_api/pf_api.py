@@ -46,8 +46,9 @@ def eventsearch(query, num):
         # print list(reversed(parties))[0]
         found_parties = []
         # events are returned chronologically, here we reverse this
-        for party in list(reversed(parties))[0:num]:
+        for party in list(parties)[0:num]:
             found_parties.append(party)
+        found_parties.sort(key=lambda party: party['stamp'])
         return found_parties
     except:
         print loaded_json

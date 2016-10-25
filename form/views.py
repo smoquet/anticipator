@@ -53,13 +53,12 @@ def index(request):
              Partyflock lookup: if there are less than 5 results in db, search partyflock n (max4) times and save result in db
             '''
 
-
             for x in search_result_key_value_pairs:
                 event_ids.append(x[0])
             if len(search_result_key_value_pairs) < 5:
                 helper.partyflock_search_and_save(event_query, event_ids)
 
-                # then return the result from the db again
+            # then return the result from the db again
             search_result_key_value_pairs = helper.db_event_search(event_query)
             template = loader.get_template('form/pages/results.html')
 
