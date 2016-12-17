@@ -12,19 +12,17 @@
                                 <form class="result_list" action="/result" method="post">
                                     {% csrf_token %}
                                     <button type="submit" id="button" name="id"
-                                            value="{{ key_value_pair.0 }}">{{ key_value_pair.1 }}</button>
+                                            value="{{ key_value_pair.0 }}"></button>
                                 </form>
                             </div>
 
 
                             <div class="cardinfo">
-                                <p>Lorem ipsum dolor
-                                    sit amet, consectetur
-                                    adipisicing elit. Ab asperiores at consequuntur
+                                <p>{{ key_value_pair.1 }}
                                 </p>
                             </div>
                             <div class="generate-list">
-                                <p> Generate playlist!</p>
+                                <p> {{ key_value_pair.2 }}</p>
                             </div>
                         </div>
                     </div>
