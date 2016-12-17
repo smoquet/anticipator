@@ -1,5 +1,10 @@
 $default-font: 'Helvetica';
 
+@font-face {
+   font-family: 'blackout';
+   src: url('../fonts/Blackout Sunrise.ttf');
+}
+
 body {
   font-family: $default-font;
   color: $color-font;

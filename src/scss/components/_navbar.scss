@@ -7,31 +7,32 @@ header {
 }
 
 .titlecontainer {
-  background-color: white;
+  // background-color: white;
   height: 60px;
 
   .title {
     font-weight: bold;
+    font-family: blackout;
     text-align: center;
     padding-top: 10px;
 
     a {
       text-decoration: none;
-      color: $color-primary;
+      color: $color-font;
     }
 
     @media #{$small-up} {
-      font-size: 40px;
+      font-size: 300%;
 
     }
 
     @media #{$medium-up} {
-      font-size: 40px;
+      font-size: 400%;
 
     }
 
     @media #{$large-up} {
-      font-size: 40px;
+      font-size: 500%;
 
     }
   }
@@ -46,7 +47,7 @@ header {
   width: 1000%;
   left: -500%;
   position: absolute;
-  background-color: white;
+  // background-color: white;
   content: ' ';
   z-index: -1;
 }

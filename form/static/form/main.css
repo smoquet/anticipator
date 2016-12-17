@@ -8,9 +8,13 @@ html {
 *, *:before, *:after {
   box-sizing: inherit; }
 
+@font-face {
+  font-family: 'blackout';
+  src: url("../fonts/Blackout Sunrise.ttf"); }
+
 body {
   font-family: "Helvetica";
-  color: #333; }
+  color: #CBA; }
 
 h1,
 h2,
@@ -51,31 +55,30 @@ header {
   z-index: 50; }
 
 .titlecontainer {
-  background-color: white;
   height: 60px; }
   .titlecontainer .title {
     font-weight: bold;
+    font-family: blackout;
     text-align: center;
     padding-top: 10px; }
     .titlecontainer .title a {
       text-decoration: none;
-      color: #444; }
+      color: #CBA; }
     @media only screen {
       .titlecontainer .title {
-        font-size: 40px; } }
+        font-size: 300%; } }
     @media only screen and (min-width: 641px) {
       .titlecontainer .title {
-        font-size: 40px; } }
+        font-size: 400%; } }
     @media only screen and (min-width: 1025px) {
       .titlecontainer .title {
-        font-size: 40px; } }
+        font-size: 500%; } }
 
 .navcontainer:before {
   height: 60px;
   width: 1000%;
   left: -500%;
   position: absolute;
-  background-color: white;
   content: ' ';
   z-index: -1; }
 
