@@ -48,17 +48,14 @@ def index(request):
             event_query = unicodedata.normalize('NFKD', event_query_unicode).encode('ascii','ignore')
             # search for the query in the db
             print 'query = ' , event_query
+            'lookup in pf first'
+
             search_result_key_value_pairs = helper.db_event_search(event_query)
-            '''
-             Partyflock lookup: if there are less than 5 results in db, search partyflock n (max4) times and save result in db
-            '''
-
-
             for x in search_result_key_value_pairs:
                 event_ids.append(x[0])
             if len(search_result_key_value_pairs) < 5:
-                helper.partyflock_search_and_save(event_query, event_ids)
 
+                helper.partyflock_search_and_save(event_query, event_ids)
                 # then return the result from the db again
             search_result_key_value_pairs = helper.db_event_search(event_query)
             template = loader.get_template('form/pages/results.html')
@@ -190,7 +187,7 @@ def victory(request):
         track_id_list = spotify.tracklist_gen(artist_ids, top_x_tracks, spot_token[1])
         playlist_id = spotify.write_playlist(track_id_list, playlist_name, spot_token[1], username)
 
-    
+
     '''
     Give context to HTML to print to browser
     '''

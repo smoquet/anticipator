@@ -10,3 +10,4 @@ six==1.10.0
 spotipy==2.3.8
 whitenoise==3.1
 psycopg2
+nltk==3.2.1

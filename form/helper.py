@@ -4,6 +4,9 @@ import unicodedata
 from ast import literal_eval
 from pf_api import pf_api
 from datetime import datetime
+import difflib
+import operator
+from nltk.tokenize import TweetTokenizer
 
 def unicodetostring(unicode):
     string_out = unicodedata.normalize('NFKD', unicode).encode('ascii','ignore')
@@ -49,22 +52,46 @@ def return_lineup_from_db(event_id):
     print 'bron = ' , source, source_id
     return lineup
 
+def event_sorter(l):
+    '''sorts list first on diff ratio, then on date'''
+    l = sort = sorted(l, key = lambda x: (x[3],x[2]),reverse=True)
+    return l
+
+def get_diff(query, event_name):
+    tknzr = TweetTokenizer()
+    query_strip = tknzr.tokenize(query)
+    name_strip = tknzr.tokenize(event_name)
+    ratio = 0
+    for word in query_strip:
+        for word2 in name_strip:
+            r = difflib.SequenceMatcher(None, word, word2).ratio()
+            rrr = r*r*r
+            ratio += rrr
+    if ratio >= len(query_strip):
+        # werk om eoa reden niet
+        print ratio ,len(name_strip)
+        ratio = 100
+    return ratio
+
 def db_event_search(event_query):
     '''
-    takes a query and returns a list of events as id:name key_value_pairs
+    takes a query and searches db
+    sorts the list first on diff ratio, then on date
+    returns a list of events like: [[id,name,timestamp,diff],[id,name,timestamp,diff]]
     '''
     search_results = Events.objects.filter(name__icontains=event_query)
     search_results_values = search_results.values()
-    # print 'search_results_values = ', search_results_values
-    # initialise result list
-    search_result_key_value_pairs = []
+    search_results = []
     # create a list with the names of events as results
     for x in search_results_values:
-        search_result_key_value_pairs.append([x['id'], x['name']])
+        event_name = x['name']
+        diff = get_diff(event_query, event_name)
+        search_results.append([x['id'], event_name,x['date'],diff])
+        event_sorter(search_results)
 
-    # print 'search_result_key_value_pairs = ', search_result_key_value_pairs
-    return search_result_key_value_pairs
-
+    # if DateTime.now
+    print search_results
+    return search_results[:5]
 def db_search_by_id(event_query):
     '''
     takes an event id and returns all the db columns as key value pairs
